@@ -1,23 +1,19 @@
 "use client";
 
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
+import AppLogo from "@/../public/favicon.png";
 import * as React from "react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -27,6 +23,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "./mode-toggle";
+import Image from "next/image";
 import { SwInstallOrUpdateButton } from "./sw-buttons";
 
 const data = {
@@ -35,23 +32,6 @@ const data = {
     email: "m@example.com",
     avatar: "/favicon.png",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Playground",
@@ -161,8 +141,9 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+      <SidebarHeader className="flex items-center gap-2 flex-row">
+        <Image src={AppLogo} alt="logo" height={64} width={64} />
+        <span className="font-bold monomakh-regular">YogaSense</span>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
