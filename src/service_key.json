@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "yogasense-87631",
+  "private_key_id": "8215d8a3f0e8a341291fb82faac86f07c6b7e3ff",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC/0MbH5DVYs2qS\n0ds5hP85dLONUOVINy+XQsLIV8DyORLCwpkGX9RC4LEeqLhht8V8cHr7LziPrP2f\nAwEDUJt5zoHhDA/pKOs/Mh4tMLSt4xgVEbHY0ldvvoZbSXpZEgOkWbtmXoa599qG\n5pVY1kfBA+MSe0nAiFLAvsfNLy0JHveiVI08945PAlbIlFVWVYw9mcH4Bioqg8nT\nsmD4NE709CQGUiG0M0zW8sPzNfo+ix2TDu1jmZFyAB2syj1EPfUJYpX8az8mI+oh\nhMjshPsG9abxiCMjN8GhufDB5kCgW/c3VHAhaJwrrChsd3kR1z/haUOfxxV9weGk\n5VjchLfdAgMBAAECggEADisE38NouFRKSS10iKdc9bi7wXKp+N9QpdbRzdwDfbC/\nBME8bdbathTkKExUkC0zillBkDeg8SXZNutRIhZMYZ8iA0Yxj6qM08ZnKbXZBqYJ\nQ5ciwI3q1O9o+6mt/pHA0J0rJSjSwT5ANyolemIbezOHDHisTisTl7aPygVTyYJN\n+XNryapoem3IifT6T0aXvpAAY904EuoGisIguzzEbvQozAQREp2q+bhmISWcXE8r\nqEZ8YmVLKi+woGXGT/7XzYw7OfZwQFgnxUxPRRSAT1jvUWYU1tpG53AiAy/bPQro\nXa4Grm+gtzOnoZ8zaoiQvQV7p66dQ9FI103lLGZTIQKBgQDvWf2a+1ANvCIfMToW\ncV6feWKLzQ9S4J0L1c1j5uEnzEK7cqvWan4eodllYGCUvnYsE2qz2o4nui7ey7B+\nrqMZu5cGam6ooM6TbvgbzxRvlt4h76qh+WBjMcjFphz3GRSzpYqHLkrKEPNgNd6+\n1ItvBWgZ/NWwvTMbveIQ2BkCvQKBgQDNKFY/BtmJVbAiPVsNIUjJ7xQjd5MeGANN\nUeEMmKtQvaZvWZOYQ8I89HD+WRj7eK0lddmusZWR9s9xuRXmNPoZTalANP53nxRq\nwZ4ILKtReKwx+XLgh9mupsf8wG969EdO9iEY4M1ZYN3WHtV9WAscVYIE8HGneCtr\n4BKNiAlroQKBgQCUbHmXYcCCw+dk8GHVCPhkbCFwD/kwq5i3fh2flcyJoWDAXJuy\nmtcap8Ln2pwJoRImwuOoJB+DAzGNd0I7TJBXpLxCfj2g1BdF1cqFdCR4DlYxNS3a\nw4nB+V1HM3tCv4rW3BDLQymdpGVHhCBctfDBJ9kmRGM+9hR7X4SQbXEVAQKBgAib\nAYshQWy2UG4PPst9Mu1tft3B/UTM4w6SOatql/0KB3oyOrOvW+1sn3S7zgV2WWTx\n3ZCrWEfIH4l4pweB/1+iV1AfKPFhldyohHV5UjJXqnlqKjxq1mGyEz9x3vs8VeVl\nA5xkiZiPLJ73qiLY15Z3q72DTHEm5ENhIcYYB7UhAoGBAIgcLsnWuBLkU4xmwfgy\nuij1LQ1mhKH2YkIxr4mm8jcdqdHiUXaFhObae2vkdNkohinR7pIKApPWnECPdDlN\nwIGFvzLYk4doprS2Ylt1n8i9NpbG2DR5M9pEYL7c6fF6cs1T0aZzWjcRkuhGnHes\ntbosDwgeur9JBIsRTQzjsMF9\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@yogasense-87631.iam.gserviceaccount.com",
+  "client_id": "102869839109737313152",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40yogasense-87631.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

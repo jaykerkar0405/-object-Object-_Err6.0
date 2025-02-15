@@ -1,8 +1,6 @@
+importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js");
 importScripts(
-  "https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.5.0/firebase-messaging-compat.js"
+  "https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"
 );
 
 firebase.initializeApp({
@@ -18,18 +16,44 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const { title, body, icon } = payload.notification;
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
+
+  const link = payload.fcmOptions?.link || payload.data?.link;
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body,
-    icon: icon || "/icons/firebase-logo.png",
-    data: payload.data,
+    body: payload.notification.body,
+    icon: "./logo.png",
+    data: { url: link },
   };
-  self.registration.showNotification(title, notificationOptions);
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener("notificationclick", (event) => {
+self.addEventListener("notificationclick", function (event) {
+  console.log("[firebase-messaging-sw.js] Notification click received.");
+
   event.notification.close();
-  if (event.notification.data?.link) {
-    event.waitUntil(clients.openWindow(event.notification.data.link));
-  }
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then(function (clientList) {
+        const url = event.notification.data.url;
+        if (!url) return;
+
+        for (const client of clientList) {
+          if (client.url === url && "focus" in client) {
+            return client.focus();
+          }
+        }
+
+        if (clients.openWindow) {
+          console.log("OPENWINDOW ON CLIENT");
+          return clients.openWindow(url);
+        }
+      })
+  );
 });
