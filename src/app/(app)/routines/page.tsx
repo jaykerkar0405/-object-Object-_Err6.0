@@ -53,34 +53,36 @@ export default function Routines() {
     setDuration(0);
   }
 
+  // fix images
   return (
     <div className="container mx-auto py-6 px-4">
       <div className="flex flex-col gap-6 items-start">
         <TypographyH1>Create Routine</TypographyH1>
 
-        <Card className="w-full max-w-md flex items-center gap-4 p-4 overflow-hidden">
-          {selectedPose ? (
-            <div className="w-[150px] h-[150px] rounded-lg overflow-hidden">
-              <Image
-                src={selectedPose.image}
-                alt={selectedPose.title}
-                layout="fixed"
-                objectFit="cover"
-                width={150}
-                height={150}
-                className="rounded-lg w-full h-full"
-              />
-            </div>
-          ) : (
-            <span className="text-gray-500">No pose selected</span>
-          )}
+        <Card className="w-full max-w-md flex-col items-center gap-8 p-4 overflow-hidden">
+          <div className="flex gap-4 items-center mb-4">
+            {selectedPose ? (
+              <div className="rounded-lg overflow-hidden">
+                <Image
+                  src={selectedPose.image}
+                  alt={selectedPose.title}
+                  width={150}
+                  height={50}
+                  className="rounded-lg w-full h-full"
+                />
+              </div>
+            ) : (
+              <span className="text-gray-500">No pose selected</span>
+            )}
 
-          <div className="flex flex-col">
             <CardHeader className="p-0">
               <CardTitle className="text-lg">
                 {selectedPose ? selectedPose.title : "Select a pose"}
               </CardTitle>
             </CardHeader>
+          </div>
+
+          <div>
             <CardContent className="p-0 text-sm text-gray-600">
               {selectedPose
                 ? selectedPose.description
@@ -166,8 +168,8 @@ export default function Routines() {
                   <img
                     className="rounded-lg"
                     src={pose.pose.image}
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                     alt={pose.pose.title}
                   />
                   <p>{pose.pose.title}</p>
