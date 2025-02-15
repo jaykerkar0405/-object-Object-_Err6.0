@@ -122,8 +122,8 @@ export const yogaPoses: YogaPose[] = [
     constraints: (landmarks) => [
       getJointFeedback(landmarks, "left-hip", { max: 100 }),
       getJointFeedback(landmarks, "right-hip", { max: 100 }),
-      getJointFeedback(landmarks, "left-elbow", { min: 150 }),
-      getJointFeedback(landmarks, "right-elbow", { min: 150 }),
+      getJointFeedback(landmarks, "left-elbow", { min: 120 }),
+      getJointFeedback(landmarks, "right-elbow", { min: 110 }),
       getJointFeedback(landmarks, "left-knee", { max: 45 }),
       getJointFeedback(landmarks, "right-knee", { max: 45 }),
     ],
