@@ -37,8 +37,8 @@ export const yogaPoses: YogaPose[] = [
     constraints: (landmarks) => [
       getJointFeedback(landmarks, "left-hip", { max: 30 }),
       getJointFeedback(landmarks, "right-hip", { max: 30 }),
-      getJointFeedback(landmarks, "left-knee", { max: 30 }),
-      getJointFeedback(landmarks, "right-knee", { max: 30 }),
+      getJointFeedback(landmarks, "left-knee", { max: 60 }),
+      getJointFeedback(landmarks, "right-knee", { max: 60 }),
     ],
     description:
       "Balasana - A restful pose that gently stretches the back, hips, and thighs, promoting relaxation and stress relief.",
