@@ -25,7 +25,9 @@ export default function Root() {
         </div>
         <IconCloudDemo />
         <Link href="/dashboard">
-          <Button>Get Started</Button>
+          <button className="px-8 py-2 rounded-full bg-gradient-to-b from-[hsl(32,33%,71%)] to-[hsl(32,33%,61%)] text-white focus:ring-2 focus:ring-[hsl(32,33%,71%)] hover:shadow-xl transition duration-200 font-bold">
+            Get Started
+          </button>
         </Link>
       </div>
     </>
