@@ -1,40 +1,38 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Trophy, Medal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+interface LeaderboardEntry {
+  userId: string;
+  name: string;
+  image: string;
+  score: number;
+  rank: number;
+}
+
 const LeaderboardComponent = () => {
-  const leaderboardData = [
-    {
-      rank: 1,
-      username: "ProGamer123",
-      score: 2500,
-      avatarUrl: "/api/placeholder/32/32",
-    },
-    {
-      rank: 2,
-      username: "PixelWarrior",
-      score: 2350,
-      avatarUrl: "/api/placeholder/32/32",
-    },
-    {
-      rank: 3,
-      username: "GameMaster",
-      score: 2200,
-      avatarUrl: "/api/placeholder/32/32",
-    },
-    {
-      rank: 4,
-      username: "EpicPlayer",
-      score: 2100,
-      avatarUrl: "/api/placeholder/32/32",
-    },
-    {
-      rank: 5,
-      username: "LegendStatus",
-      score: 2000,
-      avatarUrl: "/api/placeholder/32/32",
-    },
-  ];
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const res = await fetch("/api/leaderboard"); // Update this to your actual API route
+        if (!res.ok) throw new Error("Failed to fetch leaderboard");
+        const data: LeaderboardEntry[] = await res.json();
+        setLeaderboard(data);
+      } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -53,6 +51,10 @@ const LeaderboardComponent = () => {
     }
   };
 
+  if (loading) {
+    return <div className="text-center text-muted-foreground">Loading...</div>;
+  }
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -62,9 +64,9 @@ const LeaderboardComponent = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {leaderboardData.map((player) => (
+          {leaderboard.map((player) => (
             <div
-              key={player.rank}
+              key={player.userId}
               className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted/80 transition-colors"
             >
               <div className="flex items-center space-x-4">
@@ -72,11 +74,11 @@ const LeaderboardComponent = () => {
                   {getRankIcon(player.rank)}
                 </div>
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={player.avatarUrl} alt={player.username} />
-                  <AvatarFallback>{player.username[0]}</AvatarFallback>
+                  <AvatarImage src={player.image} alt={player.name} />
+                  <AvatarFallback>{player.name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="font-semibold">{player.username}</span>
+                  <span className="font-semibold">{player.name}</span>
                   <span className="text-sm text-muted-foreground">
                     {player.score} pts
                   </span>
