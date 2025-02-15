@@ -27,7 +27,6 @@ import { DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -58,19 +57,9 @@ export function SidebarNavigation() {
 
   const linkGroups = [
     {
-      label: "Application",
       items: [
         { label: "Dashboard", href: "/dashboard", icon: LayoutDashboardIcon },
-        {
-          label: "Analytics",
-          href: "/analytics",
-          icon: ChartNoAxesCombinedIcon,
-        },
-      ],
-    },
-    {
-      label: "Items",
-      items: [
+
         { label: "Poses", href: "/poses", icon: PersonStandingIcon },
         { label: "Routines", href: "/routines", icon: NotebookTextIcon },
         { label: "Breathing", href: "/breathing", icon: Wind },
@@ -81,9 +70,8 @@ export function SidebarNavigation() {
     },
   ];
 
-  return linkGroups.map((group) => (
-    <SidebarGroup key={group.label}>
-      <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+  return linkGroups.map((group, index) => (
+    <SidebarGroup key={index}>
       <SidebarGroupContent>
         <SidebarMenu>
           {group.items.map((item) => (
