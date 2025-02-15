@@ -45,7 +45,6 @@ interface YogaPose {
 interface PoseRoutines {
   pose: YogaPose;
   duration: number;
-  reps: number;
 }
 
 export default function Routines() {
@@ -57,12 +56,8 @@ export default function Routines() {
   function addPose(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const reps = Number(formData.get("reps"));
     const duration = Number(formData.get("duration"));
-    setPoses((prevPoses) => [
-      ...prevPoses,
-      { duration, reps, pose: selectedPose! },
-    ]);
+    setPoses((prevPoses) => [...prevPoses, { duration, pose: selectedPose! }]);
     e.currentTarget.reset();
   }
 
@@ -76,7 +71,6 @@ export default function Routines() {
         (pose, index) => ({
           poseName: pose.pose.title,
           duration: pose.duration,
-          reps: pose.reps,
           poseIndex: index,
         }),
         routineName
@@ -149,19 +143,6 @@ export default function Routines() {
             </Select>
             <div className="flex flex-col gap-4 w-full max-w-md pt-4">
               <div className="flex gap-4 items-center">
-                <Label htmlFor="reps" className="w-24">
-                  Repetitions
-                </Label>
-                <Input
-                  name="reps"
-                  required
-                  type="number"
-                  min={1}
-                  max={100}
-                  className="flex-1"
-                />
-              </div>
-              <div className="flex gap-4 items-center">
                 <Label htmlFor="duration" className="w-24">
                   Duration
                 </Label>
@@ -198,7 +179,6 @@ export default function Routines() {
           <TableRow className="hover:bg-transparent">
             <TableHead>Pose name</TableHead>
             <TableHead>Duration</TableHead>
-            <TableHead>Repetitions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -217,7 +197,6 @@ export default function Routines() {
                 </div>
               </TableCell>
               <TableCell>{pose.duration}</TableCell>
-              <TableCell>{pose.reps}</TableCell>
             </TableRow>
           ))}
         </TableBody>
