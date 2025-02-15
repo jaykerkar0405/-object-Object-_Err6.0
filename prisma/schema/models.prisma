@@ -15,3 +15,23 @@ model RoutinePose {
   reps      Int
   poseIndex Int
 }
+
+model PoseData {
+  id            String         @id @default(cuid())
+  poseName      String
+  duration      Int
+  createdAt     DateTime       @default(now())
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String
+  poseFeedbacks PoseFeedback[]
+}
+
+model PoseFeedback {
+  id         String   @id @default(cuid())
+  time       Float
+  feedback   String?
+  poseData   PoseData @relation(fields: [poseDataId], references: [id])
+  poseDataId String
+  joint      String
+  angle      Float
+}

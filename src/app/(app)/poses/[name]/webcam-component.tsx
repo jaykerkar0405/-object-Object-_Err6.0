@@ -1,6 +1,7 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -23,9 +24,18 @@ import {
   FilesetResolver,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
+import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { createPoseData } from "./actions";
 
-export function WebcamComponent({ pose }: { pose: YogaPose }) {
+export function WebcamComponent({
+  pose,
+  duration,
+}: {
+  pose: YogaPose;
+  duration: number;
+}) {
   const [poseLandmarker, setPoseLandmarker] = useState<PoseLandmarker>();
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
@@ -36,6 +46,8 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
       feedbacks: PoseFeedback[];
     }[]
   >([]);
+  const [timer, setTimer] = useState<number>(4);
+  const [timeLeft, setTimeLeft] = useState<number>(duration);
 
   const playing = useRef(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -74,7 +86,32 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
         const video = document.getElementById("webcam") as HTMLVideoElement;
         video.srcObject = stream;
       });
+
+    const countdownInterval = setInterval(() => {
+      setTimer((prev) => {
+        if (typeof prev !== "number") return 0;
+        if (prev <= 0) {
+          clearInterval(countdownInterval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }, [selectedDevice]);
+
+  useEffect(() => {
+    if (timer !== 0) return;
+    const countdownInterval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (typeof prev !== "number") return 0;
+        if (prev <= 0) {
+          clearInterval(countdownInterval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, [timer]);
 
   useEffect(() => {
     const now = performance.now();
@@ -92,6 +129,13 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
         if (feedback?.includes("Bend")) counts.bend++;
       });
     });
+
+    const threshold = recentFeedbacks.length * 0.9;
+    for (const [joint, counts] of jointFeedbacks.entries()) {
+      if (counts.extend < threshold && counts.bend < threshold) {
+        jointFeedbacks.delete(joint);
+      }
+    }
 
     const feedbackString = Array.from(jointFeedbacks.entries())
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -116,6 +160,7 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
             },
             body: JSON.stringify({ text: feedbackString }),
           });
+          if (timeLeft <= 0) return;
 
           const { audioUrl } = await response.json();
           audioRef.current!.src = audioUrl;
@@ -130,7 +175,36 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
       }
       generateAndPlaySpeech();
     }
-  }, [feedbacks, playing]);
+  }, [feedbacks, playing, timeLeft]);
+
+  useEffect(() => {
+    if (timeLeft !== 0) return;
+    audioRef.current!.src = "/sounds/finish.mp3";
+    const feedbackData = feedbacks.flatMap(({ time, feedbacks }) =>
+      feedbacks.map((f) => ({
+        ...f,
+        feedback: f.feedback ?? null,
+        time,
+      }))
+    );
+    audioRef.current!.play().then(() => {
+      const { unwrap } = toast.promise(
+        createPoseData({
+          name: pose.name,
+          duration,
+          feedbacks: feedbackData,
+        }),
+        {
+          loading: "Saving your performance...",
+          success: "Saved your performance!",
+          error: "Failed to save your performance.",
+        }
+      );
+      unwrap().then((v) => redirect(`/poses/view/${v.id}`));
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft]);
 
   useEffect(() => {
     if (!selectedDevice || !poseLandmarker || !videoElement.current) return;
@@ -218,6 +292,17 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
           className="col-start-1 row-start-1 w-full h-full"
           ref={canvasElement}
         ></canvas>
+        {timer !== undefined && timer > 0 && timer < 4 && (
+          <div className="col-start-1 row-start-1 w-full h-full flex items-center justify-center">
+            <span className="text-9xl font-bold text-white drop-shadow-lg">
+              {timer}
+            </span>
+          </div>
+        )}
+      </div>
+      <div className="flex gap-2 items-center">
+        <Progress value={((duration - timeLeft) * 100) / duration} />
+        <span className="whitespace-nowrap">{timeLeft} seconds left</span>
       </div>
       <Table>
         <TableCaption>Some feedback from our model.</TableCaption>
@@ -235,7 +320,7 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{value.joint}</TableCell>
               <TableCell>{value.feedback}</TableCell>
-              <TableCell>{value.angle}</TableCell>
+              <TableCell>{value.angle.toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

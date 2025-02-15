@@ -13,7 +13,8 @@ export default function Pose() {
   return (
     <>
       <TypographyH1>{pose.title}</TypographyH1>
-      <WebcamComponent pose={pose} />
+
+      <WebcamComponent pose={pose} duration={3} />
     </>
   );
 }
