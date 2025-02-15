@@ -10,12 +10,11 @@ import {
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
-import { breathing, BreathingAction } from "@/actions/breathing";
+import { BreathingAction } from "@/actions/breathing";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useSession } from "@/lib/auth-client";
 
 type BreathingPhase =
   | "Inhale"
@@ -50,7 +49,6 @@ const breathingPatterns: Record<BreathingPatternKey, BreathingStep[]> = {
 };
 
 export default function Breathing() {
-  const { data: session } = useSession();
   const [breathingPhase, setBreathingPhase] =
     useState<BreathingPhase>("Inhale");
   const [breathingPattern, setBreathingPattern] =

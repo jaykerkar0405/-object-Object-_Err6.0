@@ -1,13 +1,13 @@
 "use client";
-import React, { useState, useRef } from "react";
-import Clock from "./clock";
 import { TypographyH1 } from "@/components/typography/H1";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useRef, useState } from "react";
+import Clock from "./clock";
 
 export default function StartMeditation() {
   const [duration, setDuration] = useState(0);
-  const clockRef = useRef(null);
+  const clockRef = useRef<Clock>(null);
 
   const handleStart = () => {
     if (clockRef.current) {
@@ -46,7 +46,7 @@ export default function StartMeditation() {
       </div>
 
       <div className="mx-auto mt-4">
-        <Clock ref={clockRef} title="Meditation Timer" duration={duration} />
+        <Clock ref={clockRef} duration={duration} />
       </div>
     </div>
   );

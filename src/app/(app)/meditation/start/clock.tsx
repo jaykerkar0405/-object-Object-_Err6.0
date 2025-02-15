@@ -15,7 +15,7 @@ interface ClockState {
 export default class Clock extends React.Component<ClockProps, ClockState> {
   private clockInterval: NodeJS.Timeout | null = null;
   private timerTimeout: NodeJS.Timeout | null = null;
-  private audioRef: React.RefObject<HTMLAudioElement>;
+  private audioRef: React.RefObject<HTMLAudioElement | null>;
 
   constructor(props: ClockProps) {
     super(props);
@@ -85,15 +85,23 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
 
   handleDate() {
     this.setState((prevState) => {
-      let { remainingMinutes, seconds } = prevState;
+      const { remainingMinutes, seconds } = prevState;
       if (seconds === 0) {
         if (remainingMinutes === 0) {
           this.stopTimer();
-          return { running: false };
+          return { remainingMinutes: 0, seconds: 0, running: false };
         }
-        return { remainingMinutes: remainingMinutes - 1, seconds: 59 };
+        return {
+          remainingMinutes: remainingMinutes - 1,
+          seconds: 59,
+          running: prevState.running,
+        };
       }
-      return { seconds: seconds - 1 };
+      return {
+        remainingMinutes: prevState.remainingMinutes,
+        seconds: seconds - 1,
+        running: prevState.running,
+      };
     });
   }
 
@@ -128,7 +136,7 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
         {!running &&
           remainingMinutes === 0 &&
           seconds === 0 &&
-          this.props.duration > 0 && <div>Time's up!</div>}
+          this.props.duration > 0 && <div>Time&apos;s up!</div>}
       </div>
     );
   }
