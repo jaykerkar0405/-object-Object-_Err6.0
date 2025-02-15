@@ -14,6 +14,9 @@ export type YogaPose = {
   constraints: (landmarks: NormalizedLandmark[]) => PoseFeedback[];
 };
 
+export const meditationPose : YogaPose =
+  
+
 export const yogaPoses: YogaPose[] = [
   {
     title: "Downward Dog",
@@ -47,8 +50,8 @@ export const yogaPoses: YogaPose[] = [
     title: "Cobra Pose",
     name: "cobra-pose",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { max: 150, min: 90 }),
-      getJointFeedback(landmarks, "right-hip", { max: 150, min: 90 }),
+      getJointFeedback(landmarks, "left-hip", { max: 130, min: 90 }),
+      getJointFeedback(landmarks, "right-hip", { max: 130, min: 90 }),
       getJointFeedback(landmarks, "left-elbow", { min: 160 }),
       getJointFeedback(landmarks, "right-elbow", { min: 140 }),
       getJointFeedback(landmarks, "left-knee", { min: 120 }),
@@ -116,6 +119,19 @@ export const yogaPoses: YogaPose[] = [
     description:
       "Urdhva Dhanurasana - A deep backbend that strengthens the entire body, increases flexibility, and boosts energy.",
   },
+  {  
+    title: "Meditation Pose",
+    description: "Sit comfortably with your back straight, close your eyes, and focus on your breath",
+    name: "meditation-pose" 
+    constraints: (landmarks) => [
+      getJointFeedback(landmarks, "left-hip", { max: 100 }),
+      getJointFeedback(landmarks, "right-hip", { max: 100 }),
+      getJointFeedback(landmarks, "left-elbow", { min: 150 }),
+      getJointFeedback(landmarks, "right-elbow", { min: 150 }),
+      getJointFeedback(landmarks, "left-knee", { max: 45 }),
+      getJointFeedback(landmarks, "right-knee", { max: 45 }),
+    ],
+  }
 ];
 
 function getAngle(
