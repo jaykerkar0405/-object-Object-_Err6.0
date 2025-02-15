@@ -8,19 +8,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { YogaPose } from "@/lib/yoga-poses";
+import { PoseFeedback, YogaPose } from "@/lib/yoga-poses";
 import {
   DrawingUtils,
   FilesetResolver,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export function WebcamComponent({ pose }: { pose: YogaPose }) {
   const [poseLandmarker, setPoseLandmarker] = useState<PoseLandmarker>();
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [lastVideoTime, setLastVideoTime] = useState(-1);
+  const [feedbacks, setFeedbacks] = useState<
+    {
+      time: number;
+      feedbacks: PoseFeedback[];
+    }[]
+  >([]);
 
   const videoElement = useRef<HTMLVideoElement>(null);
   const canvasElement = useRef<HTMLCanvasElement>(null);
@@ -95,7 +110,11 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
             }
             if (pose.constraints) {
               try {
-                console.log(pose.constraints(result.worldLandmarks[0]));
+                const feedback = pose.constraints(result.worldLandmarks[0]);
+                setFeedbacks((prev) => [
+                  ...prev,
+                  { time: performance.now(), feedbacks: feedback },
+                ]);
               } catch {}
             }
             canvasCtx.restore();
@@ -141,6 +160,27 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
           ref={canvasElement}
         ></canvas>
       </div>
+      <Table>
+        <TableCaption>Some feedback from our model.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>No.</TableHead>
+            <TableHead>Joint</TableHead>
+            <TableHead>Feedback</TableHead>
+            <TableHead>Angle</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {feedbacks.at(-1)?.feedbacks.map((value, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell>{value.joint}</TableCell>
+              <TableCell>{value.feedback}</TableCell>
+              <TableCell>{value.angle}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 }

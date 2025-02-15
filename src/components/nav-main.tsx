@@ -2,20 +2,17 @@
 
 import { signOut, useSession } from "@/lib/auth-client";
 import {
-  BookOpenTextIcon,
   ChartNoAxesCombinedIcon,
   ChevronUp,
   CogIcon,
-  GithubIcon,
-  GlobeLockIcon,
   LayoutDashboardIcon,
   LoaderCircle,
   LogInIcon,
   LogOutIcon,
   NotebookTextIcon,
   PersonStandingIcon,
-  Wind,
   User2,
+  Wind,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,22 +71,6 @@ export function SidebarNavigation() {
         { label: "Poses", href: "/poses", icon: PersonStandingIcon },
         { label: "Routines", href: "/routines", icon: NotebookTextIcon },
         { label: "Breathing", href: "/breathing", icon: Wind },
-      ],
-    },
-    {
-      label: "Resources",
-      items: [
-        { label: "Docs", href: "/docs", icon: BookOpenTextIcon },
-        {
-          label: "Github",
-          href: "https://github.com/jaykerkar0405/-object-Object-_Err6.0",
-          icon: GithubIcon,
-        },
-        {
-          label: "Privacy policy",
-          href: "/privacy-policy",
-          icon: GlobeLockIcon,
-        },
       ],
     },
   ];
