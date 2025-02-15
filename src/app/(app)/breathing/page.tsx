@@ -61,10 +61,35 @@ export default function BreathingE() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    audioRef.current = new Audio("/ambient-music.mp3");
+    audioRef.current.loop = true;
+
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.log("Audio playback failed:", error);
+            setIsPlaying(false);
+          });
+        }
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
 
   const startExercise = () => {
     setIsExerciseStarted(true);
@@ -94,32 +119,26 @@ export default function BreathingE() {
       isRunningRef.current = false;
       setIsExerciseStarted(false);
       setBreathingPhase("Inhale");
+      setIsPlaying(false);
     }, duration * 60 * 1000);
   };
 
   const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
+    setIsPlaying(!isPlaying);
   };
 
   const getScale = (phase: BreathingPhase) => {
     switch (phase) {
       case "Inhale":
-        return 2.5;
+        return 2.25;
       case "Hold":
-        return 2.5;
+        return 2.25;
       case "Exhale":
-        return 1.5;
+        return 1.25;
       case "Inhale deeply":
-        return 3.0;
+        return 2.75;
       case "Exhale slowly":
-        return 1.2;
+        return 1.25;
       default:
         return 1.0;
     }
@@ -177,44 +196,37 @@ export default function BreathingE() {
           <Button onClick={startExercise}>Start Breathing</Button>
         </form>
       ) : (
-        <>
-          <audio ref={audioRef} loop>
-            <source src="/ambient-music.mp3" type="audio/mp3" />
-            Your browser does not support the audio element.
-          </audio>
+        <Card className="w-full max-w-md mx-auto shadow-lg border border-gray-200 dark:border-gray-800 bg-background">
+          <CardContent className="flex flex-col items-center gap-6 py-6">
+            <motion.div
+              className="flex justify-center items-center w-48 h-48"
+              animate={{
+                rotate: [0, 360],
+                scale: getScale(breathingPhase),
+              }}
+              transition={{
+                scale: { duration: animationDuration, ease: "easeInOut" },
+                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+              }}
+            >
+              <Image
+                width={128}
+                height={128}
+                alt="Breathing"
+                src="/breathing.png"
+                className="object-contain drop-shadow-md"
+              />
+            </motion.div>
 
-          <Card className="w-full max-w-md mx-auto shadow-lg border border-gray-200 dark:border-gray-800 bg-background">
-            <CardContent className="flex flex-col items-center gap-6 py-6">
-              <motion.div
-                className="flex justify-center items-center w-48 h-48"
-                animate={{
-                  rotate: [0, 360],
-                  scale: getScale(breathingPhase),
-                }}
-                transition={{
-                  scale: { duration: animationDuration, ease: "easeInOut" },
-                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                }}
-              >
-                <Image
-                  width={128}
-                  height={128}
-                  alt="Breathing"
-                  src="/breathing.png"
-                  className="object-contain drop-shadow-md"
-                />
-              </motion.div>
+            <p className="text-2xl font-semibold text-center capitalize">
+              {breathingPhase}
+            </p>
 
-              <p className="text-2xl font-semibold text-center capitalize">
-                {breathingPhase}
-              </p>
-
-              <Button onClick={toggleMusic}>
-                {isPlaying ? "Pause Music" : "Play Music"}
-              </Button>
-            </CardContent>
-          </Card>
-        </>
+            <Button onClick={toggleMusic}>
+              {isPlaying ? "Pause Music" : "Play Music"}
+            </Button>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
