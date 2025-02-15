@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id            String     @id
+  id            String      @id
   name          String
   email         String
   emailVerified Boolean
@@ -21,6 +21,7 @@ model User {
   routines      Routine[]
   breathings    Breathing[]
   PoseData      PoseData[]
+  HeartRate     HeartRate[]
 
   @@unique([email])
   @@map("user")
@@ -72,10 +73,18 @@ model Verification {
 }
 
 model Breathing {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  duration       Int
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  duration         Int
   breathingPattern String
-  createdAt      DateTime @default(now())
+  createdAt        DateTime @default(now())
+}
+
+model HeartRate {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  timestamp DateTime
+  heartRate Int
 }

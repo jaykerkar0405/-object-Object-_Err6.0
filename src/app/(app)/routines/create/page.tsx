@@ -157,7 +157,7 @@ export default function Routines() {
             </div>
           </CardContent>
 
-          <CardFooter className="justify-between">
+          <CardFooter className="flex-col md:flex-row gap-2 items-end justify-between">
             <Button type="submit" variant="secondary">
               <PlusIcon />
               Add Pose

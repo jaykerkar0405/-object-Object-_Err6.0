@@ -59,7 +59,7 @@ export default function Breathing() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [audioLoaded, setAudioLoaded] = useState(false);
-  const [phaseKey, setPhaseKey] = useState<number>(0); // Add key for animation reset
+  const [, setPhaseKey] = useState<number>(0); // Add key for animation reset
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
@@ -115,12 +115,7 @@ export default function Breathing() {
     countdownRef.current = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          cleanupTimers();
-          setIsExerciseStarted(false);
-          if (isPlaying && audioRef.current) {
-            audioRef.current.pause();
-            setIsPlaying(false);
-          }
+          stopExercise();
           return 0;
         }
         return prev - 1;
@@ -128,6 +123,23 @@ export default function Breathing() {
     }, 1000);
 
     runPhase();
+  };
+
+  const stopExercise = async () => {
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = null;
+    }
+    setIsExerciseStarted(false);
+    setBreathingPhase("Inhale");
+    setTimeRemaining(0);
+
+    const formData = new FormData();
+    formData.append("duration", duration.toString());
+    formData.append("breathingPattern", breathingPattern);
+
+    const response = await BreathingAction(formData);
+    console.log(response);
   };
 
   const runPhase = () => {

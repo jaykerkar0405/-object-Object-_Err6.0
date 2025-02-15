@@ -1,16 +1,20 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
-import { useRoutineStore } from "./routine-state";
-import { yogaPoses } from "@/lib/yoga-poses";
 import { WebcamComponent } from "@/app/(app)/poses/[name]/webcam-component";
+import { yogaPoses } from "@/lib/yoga-poses";
+import { Prisma } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
+import { logRoutine } from "./actions";
+import { useRoutineStore } from "./routine-state";
 
 export function RoutineProgress({
   routine,
 }: {
   routine: Prisma.RoutineGetPayload<{ include: { routinePoses: true } }>;
 }) {
+  const router = useRouter();
   const routineStore = useRoutineStore();
   const currentPose = routine.routinePoses[routineStore.currentPoseIndex];
   const progress =
@@ -18,9 +22,26 @@ export function RoutineProgress({
 
   useEffect(() => {
     if (routineStore.currentPoseIndex >= routine.routinePoses.length) {
-      console.log("Routine completed!");
+      const { unwrap } = toast.promise(
+        logRoutine(routineStore.poseData, routine.id),
+        {
+          success: "Logged routine successfully",
+          loading: "Logging routine...",
+        }
+      );
+      unwrap().then(() => {
+        routineStore.resetRoutine();
+        router.push("/routines");
+      });
     }
-  }, [routineStore.currentPoseIndex, routine.routinePoses.length]);
+  }, [
+    routineStore.currentPoseIndex,
+    routine.routinePoses.length,
+    routineStore.poseData,
+    routine.id,
+    routineStore,
+    router,
+  ]);
 
   if (routineStore.currentPoseIndex >= routine.routinePoses.length) {
     return (
@@ -68,7 +89,8 @@ export function RoutineProgress({
 
       {currentPose && (
         <WebcamComponent
-          pose={yogaPoses.find((p) => p.name === currentPose.poseName)!}
+          key={currentPose.poseName} // Add key prop to force re-render
+          pose={yogaPoses.find((p) => p.title === currentPose.poseName)!}
           duration={currentPose.duration}
           isRoutine
         />

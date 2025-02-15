@@ -24,11 +24,12 @@ import {
   FilesetResolver,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { createPoseData } from "./actions";
 import { useRoutineStore } from "../../routines/[id]/start/routine-state";
+import { createPoseData } from "./actions";
+import { LoaderCircle } from "lucide-react";
 
 export function WebcamComponent({
   pose,
@@ -39,6 +40,7 @@ export function WebcamComponent({
   duration: number;
   isRoutine?: boolean;
 }) {
+  const router = useRouter();
   const [poseLandmarker, setPoseLandmarker] = useState<PoseLandmarker>();
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export function WebcamComponent({
       feedbacks: PoseFeedback[];
     }[]
   >([]);
-  const [timer, setTimer] = useState<number>(4);
+  const [timer, setTimer] = useState<number>(1);
   const [timeLeft, setTimeLeft] = useState<number>(duration);
 
   const routineStore = useRoutineStore();
@@ -193,6 +195,11 @@ export function WebcamComponent({
     );
     audioRef.current!.play().then(() => {
       if (isRoutine) {
+        routineStore.addPoseData({
+          duration,
+          poseFeedbacks: feedbackData,
+          poseName: pose.name,
+        });
         routineStore.nextPose();
         return;
       }
@@ -208,7 +215,7 @@ export function WebcamComponent({
           error: "Failed to save your performance.",
         }
       );
-      unwrap().then((v) => redirect(`/poses/view/${v.id}`));
+      unwrap().then((v) => router.push(`/poses/view/${v.id}`));
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -300,11 +307,9 @@ export function WebcamComponent({
           className="col-start-1 row-start-1 w-full h-full"
           ref={canvasElement}
         ></canvas>
-        {timer !== undefined && timer > 0 && timer < 4 && (
+        {timer !== undefined && timer > 0 && timer < 1 && (
           <div className="col-start-1 row-start-1 w-full h-full flex items-center justify-center">
-            <span className="text-9xl font-bold text-white drop-shadow-lg">
-              {timer}
-            </span>
+            <LoaderCircle className="animate-spin" size={48} />
           </div>
         )}
       </div>
