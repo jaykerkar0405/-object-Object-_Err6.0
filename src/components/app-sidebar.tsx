@@ -1,77 +1,53 @@
-"use client";
-
 import {
-  BookOpen,
-  Bot,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-import AppLogo from "@/../public/favicon.png";
-import * as React from "react";
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavUser } from "@/components/nav-user";
+  HomeButton,
+  SidebarNavigation,
+  UserDropdownButtons,
+  UserDropdownTriggerButton,
+} from "@/components/nav-main";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarRail,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { ModeToggle } from "./mode-toggle";
-import Image from "next/image";
+import * as React from "react";
 import { SwInstallOrUpdateButton } from "./sw-buttons";
-import { useSession } from "@/lib/auth-client";
-
-const data = {
-  teams: [
-    {
-      name: "YogaSense",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-  ],
-  navMain: [
-    {
-      url: "#",
-      isActive: true,
-      title: "Playground",
-      icon: SquareTerminal,
-    },
-  ],
-};
+import { DropdownMenu, DropdownMenuContent } from "./ui/dropdown-menu";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session } = useSession();
-
-  const user = {
-    name: session?.user.name || "",
-    email: session?.user.email || "",
-    avatar: session?.user.image || "",
-  };
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex items-center gap-2 flex-row">
-        <Image src={AppLogo} alt="logo" height={64} width={64} />
-        <span className="font-bold monomakh-regular">YogaSense</span>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="h-fit" asChild>
+              <HomeButton />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <SidebarNavigation />
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
-        <SidebarMenu>
+        <SidebarMenu className="flex flex-row w-full">
           <SwInstallOrUpdateButton />
+          <SidebarMenuItem className="w-full">
+            <DropdownMenu>
+              <UserDropdownTriggerButton />
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <UserDropdownButtons />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
         </SidebarMenu>
-        {session && <NavUser user={user} />}
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
