@@ -14,7 +14,7 @@ import {
   LogOutIcon,
   NotebookTextIcon,
   PersonStandingIcon,
-  User2
+  User2,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export function HomeButton() {
     >
       <Link className="text-xl font-semibold w-full p-2" href="/">
         <Image src="/favicon.png" alt="logo" width={48} height={48} />
-        MyFit <span className="font-normal text-sm ml-auto">v4</span>
+        YogaSense
       </Link>
     </Button>
   );
