@@ -8,13 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PoseFeedback, YogaPose } from "@/lib/yoga-poses";
-import {
-  DrawingUtils,
-  FilesetResolver,
-  PoseLandmarker,
-} from "@mediapipe/tasks-vision";
-import { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -24,12 +17,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PoseFeedback, YogaPose } from "@/lib/yoga-poses";
+import {
+  DrawingUtils,
+  FilesetResolver,
+  PoseLandmarker,
+} from "@mediapipe/tasks-vision";
+import { useEffect, useRef, useState } from "react";
 
 export function WebcamComponent({ pose }: { pose: YogaPose }) {
   const [poseLandmarker, setPoseLandmarker] = useState<PoseLandmarker>();
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [lastVideoTime, setLastVideoTime] = useState(-1);
+  const [playing, setPlaying] = useState(false);
   const [feedbacks, setFeedbacks] = useState<
     {
       time: number;
@@ -37,6 +38,7 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
     }[]
   >([]);
 
+  const audioRef = useRef<HTMLAudioElement>(null);
   const videoElement = useRef<HTMLVideoElement>(null);
   const canvasElement = useRef<HTMLCanvasElement>(null);
 
@@ -73,6 +75,59 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
         video.srcObject = stream;
       });
   }, [selectedDevice]);
+
+  useEffect(() => {
+    const now = performance.now();
+    const recentFeedbacks = feedbacks.filter((f) => now - f.time < 1500);
+
+    const jointFeedbacks = new Map<string, { extend: number; bend: number }>();
+
+    recentFeedbacks.forEach(({ feedbacks }) => {
+      feedbacks.forEach(({ joint, feedback }) => {
+        if (!jointFeedbacks.has(joint)) {
+          jointFeedbacks.set(joint, { extend: 0, bend: 0 });
+        }
+        const counts = jointFeedbacks.get(joint)!;
+        if (feedback?.includes("Extend")) counts.extend++;
+        if (feedback?.includes("Bend")) counts.bend++;
+      });
+    });
+
+    const feedbackString = Array.from(jointFeedbacks.entries())
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .filter(([_, counts]) => counts.extend > 0 || counts.bend > 0)
+      .map(
+        ([joint, counts]) =>
+          `${
+            counts.extend > counts.bend ? "extend" : "bend"
+          } your ${joint} more`
+      )
+      .join(", ");
+
+    if (feedbackString.length) {
+      async function generateAndPlaySpeech() {
+        try {
+          if (playing) return;
+          const response = await fetch("/api/speech", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: feedbackString }),
+          });
+
+          const { audioUrl } = await response.json();
+          audioRef.current!.src = audioUrl;
+          setPlaying(true);
+          await audioRef.current!.play();
+          audioRef.current!.addEventListener("ended", () => setPlaying(false));
+        } catch (error) {
+          console.error("Error playing audio:", error);
+        }
+      }
+      generateAndPlaySpeech();
+    }
+  }, [feedbacks, playing]);
 
   useEffect(() => {
     if (!selectedDevice || !poseLandmarker || !videoElement.current) return;
@@ -130,6 +185,7 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
   return (
     <>
       <div className="flex flex-col gap-1.5">
+        <audio ref={audioRef}></audio>
         <Label>Camera</Label>
         <Select onValueChange={(v) => setSelectedDevice(v)}>
           <SelectTrigger className="w-full">
