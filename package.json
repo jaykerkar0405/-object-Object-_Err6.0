@@ -43,6 +43,7 @@
     "@radix-ui/react-visually-hidden": "^1.1.2",
     "@serwist/next": "^9.0.11",
     "aframe": "^1.6.0",
+    "aframe-react": "^4.4.0",
     "better-auth": "^1.1.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,6 +69,7 @@
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.173.0",
     "vaul": "^1.1.2",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
@@ -78,11 +80,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.173.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",
     "serwist": "^9.0.11",
     "tailwindcss": "^3.4.1",
+    "types-aframe-react": "^1.0.2",
     "typescript": "^5"
   }
 }

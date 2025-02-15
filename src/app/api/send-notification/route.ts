@@ -2,6 +2,8 @@ import admin from "firebase-admin";
 import { Message } from "firebase-admin/messaging";
 import { NextRequest, NextResponse } from "next/server";
 
+/* eslint-disable */
+
 if (!admin.apps.length) {
   const serviceAccount = require("@/service_key.json");
   admin.initializeApp({

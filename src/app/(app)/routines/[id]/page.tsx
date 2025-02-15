@@ -13,17 +13,18 @@ import Link from "next/link";
 export default async function RoutineDetail({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+
   const routineDetails = await prisma.routinePose.findMany({
     where: {
-      routineId: params.id,
+      routineId: id,
     },
     orderBy: {
       poseIndex: "asc",
     },
   });
-  console.log(routineDetails);
   return (
     <div>
       <Table>

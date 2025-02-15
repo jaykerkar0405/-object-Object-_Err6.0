@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { TypographyH1 } from "@/components/typography/H1";
 import { Button } from "@/components/ui/button";
 import {
