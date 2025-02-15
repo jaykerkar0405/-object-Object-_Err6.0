@@ -24,7 +24,6 @@ function easeOutCubic(t: number): number {
 export function IconCloud({ icons, images }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [iconPositions, setIconPositions] = useState<Icon[]>([]);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -37,8 +36,8 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     startTime: number;
     duration: number;
   } | null>(null);
-  const animationFrameRef = useRef<number>();
-  const rotationRef = useRef(rotation);
+  const animationFrameRef = useRef<number | null>(null);
+  const rotationRef = useRef({ x: 0, y: 0 });
   const iconCanvasesRef = useRef<HTMLCanvasElement[]>([]);
   const imagesLoadedRef = useRef<boolean[]>([]);
 
@@ -156,14 +155,14 @@ export function IconCloud({ icons, images }: IconCloudProps) {
       if (dx * dx + dy * dy < radius * radius) {
         const targetX = -Math.atan2(
           icon.y,
-          Math.sqrt(icon.x * icon.x + icon.z * icon.z),
+          Math.sqrt(icon.x * icon.x + icon.z * icon.z)
         );
         const targetY = Math.atan2(icon.x, icon.z);
 
         const currentX = rotationRef.current.x;
         const currentY = rotationRef.current.y;
         const distance = Math.sqrt(
-          Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2),
+          Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2)
         );
 
         const duration = Math.min(2000, Math.max(800, distance * 1000));
@@ -267,7 +266,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         ctx.save();
         ctx.translate(
           canvas.width / 2 + rotatedX,
-          canvas.height / 2 + rotatedY,
+          canvas.height / 2 + rotatedY
         );
         ctx.scale(scale, scale);
         ctx.globalAlpha = opacity;
