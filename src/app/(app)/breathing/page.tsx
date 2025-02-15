@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { getHeartrate } from "../actions";
+import { toast } from "sonner";
 
 type BreathingPhase =
   | "Inhale"
@@ -60,7 +61,8 @@ export default function Breathing() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [audioLoaded, setAudioLoaded] = useState(false);
-  const [, setPhaseKey] = useState<number>(0); // Add key for animation reset
+  const [audioError, setAudioError] = useState<string | null>(null);
+  const [, setPhaseKey] = useState<number>(0);
   const [latestHr, setLatestHr] = useState<number>();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -69,6 +71,58 @@ export default function Breathing() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const phaseIndexRef = useRef<number>(0);
 
+  // Initialize audio
+  useEffect(() => {
+    const initializeAudio = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+
+      const audio = new Audio();
+      audio.src = "/ambient-music.mp3";
+      audio.loop = true;
+
+      const handleCanPlay = () => {
+        setAudioLoaded(true);
+        setAudioError(null);
+      };
+
+      const handleError = () => {
+        setAudioError("Failed to load audio");
+        setAudioLoaded(false);
+        setIsPlaying(false);
+      };
+
+      audio.addEventListener("canplay", handleCanPlay);
+      audio.addEventListener("error", handleError);
+
+      // Preload the audio
+      audio.load();
+      audioRef.current = audio;
+
+      return () => {
+        audio.removeEventListener("canplay", handleCanPlay);
+        audio.removeEventListener("error", handleError);
+      };
+    };
+
+    const cleanup = initializeAudio();
+
+    return () => {
+      cleanup();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+      setIsPlaying(false);
+      setAudioLoaded(false);
+    };
+  }, []);
+
+  // Handle heartrate updates
   useEffect(() => {
     const interval = setInterval(() => {
       getHeartrate().then((value) => setLatestHr(value?.heartRate));
@@ -77,23 +131,17 @@ export default function Breathing() {
     return () => clearInterval(interval);
   }, []);
 
+  // Cleanup on unmount
   useEffect(() => {
-    audioRef.current = new Audio("/ambient-music.mp3");
-    audioRef.current.loop = true;
-
-    const handleCanPlay = () => {
-      setAudioLoaded(true);
-    };
-
-    audioRef.current.addEventListener("canplay", handleCanPlay);
-
     return () => {
+      cleanupTimers();
+      isRunningRef.current = false;
       if (audioRef.current) {
-        audioRef.current.removeEventListener("canplay", handleCanPlay);
         audioRef.current.pause();
+        audioRef.current.src = "";
         audioRef.current = null;
       }
-      cleanupTimers();
+      setIsPlaying(false);
     };
   }, []);
 
@@ -136,20 +184,31 @@ export default function Breathing() {
   };
 
   const stopExercise = async () => {
-    if (countdownRef.current) {
-      clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    }
+    cleanupTimers();
+    isRunningRef.current = false;
     setIsExerciseStarted(false);
     setBreathingPhase("Inhale");
     setTimeRemaining(0);
+
+    // Stop music if playing
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+    }
 
     const formData = new FormData();
     formData.append("duration", duration.toString());
     formData.append("breathingPattern", breathingPattern);
 
-    const response = await BreathingAction(formData);
-    console.log(response);
+    try {
+      const response = await BreathingAction(formData);
+      console.log(response);
+      toast.success("Exercise data saved successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save exercise data.");
+    }
   };
 
   const runPhase = () => {
@@ -160,7 +219,7 @@ export default function Breathing() {
 
     setBreathingPhase(currentPhase.phase);
     setAnimationDuration(currentPhase.duration / 1000);
-    setPhaseKey((prev) => prev + 1); // Increment key to force animation reset
+    setPhaseKey((prev) => prev + 1);
 
     if (timerRef.current) clearTimeout(timerRef.current);
 
@@ -171,10 +230,20 @@ export default function Breathing() {
   };
 
   const toggleMusic = async () => {
-    if (!audioRef.current || !audioLoaded) return;
+    if (!audioRef.current) {
+      toast.error("Audio not initialized");
+      return;
+    }
 
     try {
       if (!isPlaying) {
+        // Reset and reload audio if needed
+        if (!audioRef.current.src) {
+          audioRef.current.src = "/ambient-music.mp3";
+          audioRef.current.loop = true;
+          await audioRef.current.load();
+        }
+        audioRef.current.currentTime = 0;
         await audioRef.current.play();
         setIsPlaying(true);
       } else {
@@ -183,7 +252,14 @@ export default function Breathing() {
       }
     } catch (error) {
       console.error("Error toggling audio:", error);
+      toast.error("Failed to toggle audio. Please try again.");
       setIsPlaying(false);
+
+      // Reset audio on error
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     }
   };
 
@@ -242,7 +318,7 @@ export default function Breathing() {
               Session Duration (minutes): {duration}
             </label>
             <Slider
-              min={1}
+              min={0.5}
               max={20}
               step={1}
               id="duration"
@@ -296,7 +372,7 @@ export default function Breathing() {
 
             <Button
               onClick={toggleMusic}
-              disabled={!audioLoaded}
+              disabled={!audioLoaded || !!audioError}
               className="flex items-center"
             >
               {isPlaying ? (
@@ -306,6 +382,8 @@ export default function Breathing() {
               )}
               <span>{isPlaying ? "Pause Music" : "Play Music"}</span>
             </Button>
+
+            {audioError && <p className="text-red-500 text-sm">{audioError}</p>}
           </CardContent>
         </Card>
       )}
