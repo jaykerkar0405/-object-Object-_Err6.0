@@ -37,7 +37,7 @@ export const yogaPoses: YogaPose[] = [
     constraints: (landmarks) => [
       getJointFeedback(landmarks, "left-hip", { max: 40 }),
       getJointFeedback(landmarks, "right-hip", { max: 30 }),
-      getJointFeedback(landmarks, "left-knee", { max: 50  }),
+      getJointFeedback(landmarks, "left-knee", { max: 40  }),
       getJointFeedback(landmarks, "right-knee", { max: 60 }),
     ],
     description:
@@ -63,7 +63,7 @@ export const yogaPoses: YogaPose[] = [
     name: "bridge-pose",
     image: "/poses/bandhasana.jpg",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { min: 120, max: 145 }),
+      getJointFeedback(landmarks, "left-hip", { min: 120, max: 160 }),
       getJointFeedback(landmarks, "right-hip", { min: 120, max: 165 }),
       getJointFeedback(landmarks, "left-knee", { min: 60 }),
       getJointFeedback(landmarks, "right-knee", { min: 60 }),
