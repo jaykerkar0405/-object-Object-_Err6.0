@@ -179,13 +179,16 @@ export function getJointFeedback(
   let feedback: string | undefined = undefined;
   if (constraint?.min !== undefined && angle < constraint.min) {
     if (joint.includes('hip')) {
-    feedback = `Bend your ${joint.replace("-", " ")} more`;
+      feedback = `Extend your ${joint.replace("-", " ")} more`;
     } else {
-
       feedback = `Bend your ${joint.replace("-", " ")} more`;
     }
   } else if (constraint?.max !== undefined && angle > constraint.max) {
-    feedback = `Extend your ${joint.replace("-", " ")} more`;
+    if (joint.includes('hip')) {
+      feedback = `Bend your ${joint.replace("-", " ")} more`;
+    } else {
+      feedback = `Extend your ${joint.replace("-", " ")} more`;
+    }
   }
   return { angle, feedback, joint };
 }
