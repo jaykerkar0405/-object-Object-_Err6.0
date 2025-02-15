@@ -9,11 +9,13 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { Pause, Play } from "lucide-react";
+import { breathing } from "@/actions/breathing";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Pause, Play } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
 
 type BreathingPhase =
   | "Inhale"
@@ -47,7 +49,8 @@ const breathingPatterns: Record<BreathingPatternKey, BreathingStep[]> = {
   ],
 };
 
-export default function BreathingE() {
+export default function Breathing() {
+  const { data: session } = useSession();
   const [breathingPhase, setBreathingPhase] =
     useState<BreathingPhase>("Inhale");
   const [breathingPattern, setBreathingPattern] =
@@ -56,8 +59,10 @@ export default function BreathingE() {
   const [animationDuration, setAnimationDuration] = useState<number>(4);
   const [isExerciseStarted, setIsExerciseStarted] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const isRunningRef = useRef<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -72,6 +77,9 @@ export default function BreathingE() {
       }
       if (timerRef.current) {
         clearTimeout(timerRef.current);
+      }
+      if (countdownRef.current) {
+        clearInterval(countdownRef.current);
       }
     };
   }, []);
@@ -92,9 +100,31 @@ export default function BreathingE() {
     }
   }, [isPlaying]);
 
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
   const startExercise = () => {
     setIsExerciseStarted(true);
     isRunningRef.current = true;
+    setTimeRemaining(duration * 60);
+
+    countdownRef.current = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          stopExercise();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
     let phaseIndex = 0;
     const pattern = breathingPatterns[breathingPattern];
@@ -115,12 +145,6 @@ export default function BreathingE() {
     };
 
     runPhase();
-
-    setTimeout(() => {
-      if (isRunningRef.current) {
-        stopExercise();
-      }
-    }, duration * 60 * 1000);
   };
 
   const stopExercise = () => {
@@ -129,8 +153,25 @@ export default function BreathingE() {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = null;
+    }
     setIsExerciseStarted(false);
     setBreathingPhase("Inhale");
+    setTimeRemaining(0);
+
+    if (session?.user.id && duration > 0 && breathingPattern) {
+      breathing(session?.user.id, duration, breathingPattern)
+        .then((res) => {
+          if (res.success) {
+            console.log("Breathing exercise saved successfully!");
+          } else {
+            console.error("Failed to save breathing exercise:", res.error);
+          }
+        })
+        .catch((err) => console.error("Error:", err));
+    }
   };
 
   const toggleMusic = () => {
@@ -208,6 +249,10 @@ export default function BreathingE() {
       ) : (
         <Card className="w-full max-w-md mx-auto shadow-lg border border-gray-200 dark:border-gray-800 bg-background">
           <CardContent className="flex flex-col items-center gap-6 py-6">
+            <div className="text-2xl font-mono font-semibold bg-secondary/20 px-4 py-2 rounded-lg">
+              {formatTime(timeRemaining)}
+            </div>
+
             <div className="relative" style={{ zIndex: 1 }}>
               <motion.div
                 className="flex justify-center items-center w-48 h-48"
@@ -234,12 +279,12 @@ export default function BreathingE() {
               {breathingPhase}
             </p>
 
-            <div className="relative z-10">
+            <div className="flex gap-4">
               <Button onClick={toggleMusic}>
                 {isPlaying ? (
-                  <Pause className="h-4 w-4" />
+                  <Pause className="h-4 w-4 mr-2" />
                 ) : (
-                  <Play className="h-4 w-4" />
+                  <Play className="h-4 w-4 mr-2" />
                 )}
                 <span>{isPlaying ? "Pause Music" : "Play Music"}</span>
               </Button>

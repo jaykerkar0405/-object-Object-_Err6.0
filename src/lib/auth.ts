@@ -9,6 +9,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://silver-couscous-ww46gx7wwj92v55v-3000.app.github.dev/api/auth",
+  ],
   socialProviders: {
     google: {
       // Create env variables

@@ -13,6 +13,7 @@ import {
   LogOutIcon,
   NotebookTextIcon,
   PersonStandingIcon,
+  Trophy,
   User2,
   Wind,
 } from "lucide-react";
@@ -75,6 +76,7 @@ export function SidebarNavigation() {
         { label: "Breathing", href: "/breathing", icon: Wind },
         { label: "Meditation", href: "/meditation", icon: Brain },
         { label: "Yoga Studio", href: "/yoga-studio", icon: Flower2 },
+        { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
       ],
     },
   ];

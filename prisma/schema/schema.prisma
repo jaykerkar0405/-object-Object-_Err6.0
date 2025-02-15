@@ -19,6 +19,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   routines      Routine[]
+  breathings    Breathing[]
   PoseData      PoseData[]
 
   @@unique([email])
@@ -68,4 +69,13 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Breathing {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  duration       Int
+  breathingPattern String
+  createdAt      DateTime @default(now())
 }

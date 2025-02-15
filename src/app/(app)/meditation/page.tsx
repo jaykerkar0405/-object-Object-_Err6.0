@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function MeditationPage() {
   const meditationTips = [
@@ -51,7 +52,9 @@ export default function MeditationPage() {
             </CardHeader>
           </Card>
         ))}
-        <Button>Start Meditation</Button>
+        <Button>
+          <Link href="/meditation/start">Start Meditation</Link>
+        </Button>
       </div>
     </div>
   );
