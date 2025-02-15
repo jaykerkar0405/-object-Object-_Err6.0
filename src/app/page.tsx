@@ -1,5 +1,9 @@
-import Link from "next/link";
+import Component from "./LandingPage";
 
 export default function Home() {
-  return <Link href="/dashboard">Go to dashboard</Link>;
+  return (
+    <div>
+      <Component />
+    </div>
+  );
 }
