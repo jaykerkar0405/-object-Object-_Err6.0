@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "lint": "next lint",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
@@ -40,6 +40,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.5.2",
+    "framer-motion": "^12.4.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.475.0",
     "next": "15.1.7",
