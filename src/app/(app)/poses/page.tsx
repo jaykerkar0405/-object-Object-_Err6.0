@@ -15,6 +15,7 @@ import {
 import { yogaPoses } from "@/lib/yoga-poses";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 export default function PreferredPoses() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,13 +27,19 @@ export default function PreferredPoses() {
   return (
     <div className="container mx-auto py-4">
       <TypographyH1>Preferred Poses</TypographyH1>
-      <div className="flex w-full max-w-sm items-center space-x-2 mt-5 mb-3">
+      <div className="flex w-full items-center gap-2 mt-5 mb-3">
         <Input
           type="text"
           placeholder="Search..."
           value={searchTerm}
+          className="grow"
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <Button asChild>
+          <Link href="/poses/view">
+            View data <ChevronRight />
+          </Link>
+        </Button>
       </div>
       <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredPoses.length > 0 ? (
