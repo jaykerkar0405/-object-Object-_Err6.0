@@ -5,8 +5,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "YogaSense",
-  description: "Your Yoga companion",
+  title: "YogaSense - AI-Powered Yoga Form Analyzer",
+  description:
+    "An AI-powered yoga app that provides real-time pose correction, personalized routines, and immersive AR guidance for better alignment and practice.",
 };
 
 const inter = Inter({
