@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "@/lib/auth-client";
 import {
+  Brain,
   ChartNoAxesCombinedIcon,
   ChevronUp,
   CogIcon,
@@ -72,6 +73,7 @@ export function SidebarNavigation() {
         { label: "Poses", href: "/poses", icon: PersonStandingIcon },
         { label: "Routines", href: "/routines", icon: NotebookTextIcon },
         { label: "Breathing", href: "/breathing", icon: Wind },
+        { label: "Meditation", href: "/meditation", icon: Brain },
         { label: "Yoga Studio", href: "/yoga-studio", icon: Flower2 },
       ],
     },

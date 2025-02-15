@@ -116,9 +116,9 @@ export const yogaPoses: YogaPose[] = [
     description:
       "Urdhva Dhanurasana - A deep backbend that strengthens the entire body, increases flexibility, and boosts energy.",
   },
-  {  
+  {
     title: "Meditation Pose",
-    name: "meditation-pose", 
+    name: "meditation-pose",
     constraints: (landmarks) => [
       getJointFeedback(landmarks, "left-hip", { max: 100 }),
       getJointFeedback(landmarks, "right-hip", { max: 100 }),
@@ -128,8 +128,9 @@ export const yogaPoses: YogaPose[] = [
       getJointFeedback(landmarks, "right-knee", { max: 45 }),
     ],
     image: "/poses/wheel-pose.jpg",
-    description: "Sit comfortably with your back straight, close your eyes, and focus on your breath",
-  }
+    description:
+      "Sit comfortably with your back straight, close your eyes, and focus on your breath",
+  },
 ];
 
 function getAngle(
@@ -192,13 +193,13 @@ export function getJointFeedback(
 
   let feedback: string | undefined = undefined;
   if (constraint?.min !== undefined && angle < constraint.min) {
-    if (joint.includes('hip')) {
+    if (joint.includes("hip")) {
       feedback = `Extend your ${joint.replace("-", " ")} more`;
     } else {
       feedback = `Bend your ${joint.replace("-", " ")} more`;
     }
   } else if (constraint?.max !== undefined && angle > constraint.max) {
-    if (joint.includes('hip')) {
+    if (joint.includes("hip")) {
       feedback = `Bend your ${joint.replace("-", " ")} more`;
     } else {
       feedback = `Extend your ${joint.replace("-", " ")} more`;
