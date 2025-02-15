@@ -58,7 +58,7 @@ const yogaPoses: YogaPose[] = [
   {
     title: "Boat Pose",
     name: "boat-pose",
-    image:"/pose/navasana.jpg"
+    image:"/pose/navasana.jpg",
     description:
       "Navasana - A core-strengthening pose that engages the abdominal muscles and improves balance.",
   },
