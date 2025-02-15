@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -13,6 +12,7 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react";
+import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -26,8 +26,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "./ModeToggle";
+import { SwInstallOrUpdateButton } from "./sw-buttons";
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -169,6 +169,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <ModeToggle />
+        <SwInstallOrUpdateButton />
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />

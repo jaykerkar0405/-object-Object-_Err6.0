@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { LinkBreadcrumbs } from "@/components/LinkBreadCrumbs";
 import { Separator } from "@/components/ui/separator";
+import { SwEventsHandler } from "@/components/sw-events-handler";
 
 export const metadata: Metadata = {
   title: "YogaSense",
@@ -51,6 +52,7 @@ export default function RootLayout({
             </main>
           </SidebarProvider>
           <Toaster />
+          <SwEventsHandler />
         </ThemeProvider>
       </body>
     </html>
