@@ -26,7 +26,7 @@ import {
   SidebarMenu,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { ModeToggle } from "./ModeToggle";
+import { ModeToggle } from "./mode-toggle";
 import { SwInstallOrUpdateButton } from "./sw-buttons";
 
 const data = {
