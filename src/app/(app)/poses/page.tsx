@@ -38,7 +38,7 @@ const yogaPoses: YogaPose[] = [
 
 export default function PreferredPoses() {
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-4">
       <TypographyH1>Preferred Poses</TypographyH1>
       <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
         {yogaPoses.map((pose, index) => (
