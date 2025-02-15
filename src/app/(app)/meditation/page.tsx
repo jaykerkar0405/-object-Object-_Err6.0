@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { MoveRight } from "lucide-react";
 import Link from "next/link";
 
 export default function MeditationPage() {
@@ -52,8 +53,10 @@ export default function MeditationPage() {
             </CardHeader>
           </Card>
         ))}
-        <Button>
-          <Link href="/meditation/start">Start Meditation</Link>
+        <Button asChild className="w-full">
+          <Link href="/meditation/start">
+            Start Meditation <MoveRight />
+          </Link>
         </Button>
       </div>
     </div>
