@@ -3,7 +3,6 @@
 import { signOut, useSession } from "@/lib/auth-client";
 import {
   Brain,
-  ChartNoAxesCombinedIcon,
   ChevronUp,
   CogIcon,
   Flower2,
