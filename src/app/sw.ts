@@ -10,12 +10,17 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
+const precacheEntries = self.__SW_MANIFEST;
+
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
+  precacheEntries,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
   runtimeCaching: defaultCache,
+  precacheOptions: {
+    navigateFallbackDenylist: [/^\/api\//],
+  },
 });
 
 serwist.addEventListeners();
