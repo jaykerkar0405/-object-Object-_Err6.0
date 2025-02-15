@@ -1,7 +1,13 @@
 import { TypographyH1 } from "@/components/typography/H1";
 import { TypographyP } from "@/components/typography/P";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -55,13 +61,13 @@ export default function PreferredPoses() {
               <CardTitle>{pose.title}</CardTitle>
             </CardHeader>
             <CardContent className="flex-grow">
-              <div className="flex flex-col items-start gap-4">
-                <TypographyP>{pose.description}</TypographyP>
-                <Link href={`preffered-poses/${pose.name}`}>
-                  <Button>Try Pose</Button>
-                </Link>
-              </div>
+              <TypographyP>{pose.description}</TypographyP>
             </CardContent>
+            <CardFooter className="justify-end">
+              <Link href={`/poses/${pose.name}`}>
+                <Button>Try Pose</Button>
+              </Link>
+            </CardFooter>
           </Card>
         ))}
       </div>
