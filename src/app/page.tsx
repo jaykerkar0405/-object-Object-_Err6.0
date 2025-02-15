@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { IconCloudDemo } from "./Cloud";
-import { Button } from "@/components/ui/button";
 import { TypographyP } from "@/components/typography/P";
 import { TypographyH1 } from "@/components/typography/H1";
 

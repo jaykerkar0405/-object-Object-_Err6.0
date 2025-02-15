@@ -12,7 +12,6 @@ model RoutinePose {
   routineId String
   poseName  String
   duration  Int
-  reps      Int
   poseIndex Int
 }
 

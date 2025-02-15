@@ -28,13 +28,16 @@ import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { createPoseData } from "./actions";
+import { useRoutineStore } from "../../routines/[id]/start/routine-state";
 
 export function WebcamComponent({
   pose,
   duration,
+  isRoutine,
 }: {
   pose: YogaPose;
   duration: number;
+  isRoutine?: boolean;
 }) {
   const [poseLandmarker, setPoseLandmarker] = useState<PoseLandmarker>();
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
@@ -49,6 +52,7 @@ export function WebcamComponent({
   const [timer, setTimer] = useState<number>(4);
   const [timeLeft, setTimeLeft] = useState<number>(duration);
 
+  const routineStore = useRoutineStore();
   const playing = useRef(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoElement = useRef<HTMLVideoElement>(null);
@@ -188,6 +192,10 @@ export function WebcamComponent({
       }))
     );
     audioRef.current!.play().then(() => {
+      if (isRoutine) {
+        routineStore.nextPose();
+        return;
+      }
       const { unwrap } = toast.promise(
         createPoseData({
           name: pose.name,

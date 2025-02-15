@@ -8,6 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import prisma from "@/lib/prisma";
+import { yogaPoses } from "@/lib/yoga-poses";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function RoutineDetail({
@@ -25,6 +27,12 @@ export default async function RoutineDetail({
       poseIndex: "asc",
     },
   });
+
+  const routineData = routineDetails.map((r) => ({
+    ...r,
+    poseData: yogaPoses.find((p) => p.title === r.poseName)!,
+  }));
+
   return (
     <div>
       <Table>
@@ -32,26 +40,28 @@ export default async function RoutineDetail({
           <TableRow className="hover:bg-transparent">
             <TableHead>Pose Name</TableHead>
             <TableHead>Duration</TableHead>
-            <TableHead>Reps</TableHead>
-            <TableHead>View</TableHead>
+            <TableHead>Try</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {routineDetails.map((routine, index) => (
+          {routineData.map((routine, index) => (
             <TableRow key={index}>
-              <TableCell>{routine.poseName}</TableCell>
+              <TableCell>{routine.poseData.title}</TableCell>
               <TableCell>{routine.duration}</TableCell>
-              <TableCell>{routine.reps}</TableCell>
               <TableCell>
-                <Link href={`/poses/${routine.poseName}`}>
-                  <Button>view</Button>
+                <Link href={`/poses/${routine.poseData.name}`}>
+                  <Button variant="secondary">
+                    <ChevronRight />
+                  </Button>
                 </Link>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Button className="w-full">Start Routine</Button>
+      <Button className="w-full" asChild>
+        <Link href={`/routines/${id}/start`}>Start Routine</Link>
+      </Button>
     </div>
   );
 }

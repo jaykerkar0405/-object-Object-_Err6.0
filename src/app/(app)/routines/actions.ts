@@ -10,7 +10,6 @@ export async function createRoutine(
     poseIndex: number;
     poseName: string;
     duration: number;
-    reps: number;
   }[],
   routineName: string
 ) {
