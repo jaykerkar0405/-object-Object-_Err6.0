@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
-import { breathing } from "@/actions/breathing";
+import { breathing, BreathingAction } from "@/actions/breathing";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useState, useEffect, useRef } from "react";
@@ -147,7 +147,7 @@ export default function Breathing() {
     runPhase();
   };
 
-  const stopExercise = () => {
+  const stopExercise = async () => {
     isRunningRef.current = false;
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -157,21 +157,17 @@ export default function Breathing() {
       clearInterval(countdownRef.current);
       countdownRef.current = null;
     }
+
     setIsExerciseStarted(false);
     setBreathingPhase("Inhale");
     setTimeRemaining(0);
 
-    if (session?.user.id && duration > 0 && breathingPattern) {
-      breathing(session?.user.id, duration, breathingPattern)
-        .then((res) => {
-          if (res.success) {
-            console.log("Breathing exercise saved successfully!");
-          } else {
-            console.error("Failed to save breathing exercise:", res.error);
-          }
-        })
-        .catch((err) => console.error("Error:", err));
-    }
+    const formData = new FormData();
+    formData.append("duration", duration.toString());
+    formData.append("breathingPattern", breathingPattern);
+
+    const response = await BreathingAction(formData);
+    console.log(response);
   };
 
   const toggleMusic = () => {
