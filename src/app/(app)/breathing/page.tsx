@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Pause, Play } from "lucide-react";
 
 type BreathingPhase =
   | "Inhale"
@@ -235,7 +236,12 @@ export default function BreathingE() {
 
             <div className="relative z-10">
               <Button onClick={toggleMusic}>
-                {isPlaying ? "Pause Music" : "Play Music"}
+                {isPlaying ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+                <span>{isPlaying ? "Pause Music" : "Play Music"}</span>
               </Button>
             </div>
           </CardContent>
