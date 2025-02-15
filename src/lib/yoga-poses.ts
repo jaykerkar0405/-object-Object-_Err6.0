@@ -63,10 +63,10 @@ export const yogaPoses: YogaPose[] = [
     name: "bridge-pose",
     image: "/poses/bandhasana.jpg",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { min: 160, max: 200 }),
-      getJointFeedback(landmarks, "right-hip", { min: 160, max: 200 }),
-      getJointFeedback(landmarks, "left-knee", { min: 90 }),
-      getJointFeedback(landmarks, "right-knee", { min: 90 }),
+      getJointFeedback(landmarks, "left-hip", { min: 120, max: 150 }),
+      getJointFeedback(landmarks, "right-hip", { min: 120, max: 250 }),
+      getJointFeedback(landmarks, "left-knee", { min: 70 }),
+      getJointFeedback(landmarks, "right-knee", { min: 70 }),
     ],
     description:
       "Setu Bandhasana - A gentle backbend that strengthens the back, glutes, and hamstrings while opening the chest.",
