@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import FcmProvider from "@/components/fcm-provider";
 
 export const metadata: Metadata = {
   title: "YogaSense - AI-Powered Yoga Form Analyzer",
@@ -35,6 +36,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <FcmProvider />
           {children}
         </ThemeProvider>
       </body>
