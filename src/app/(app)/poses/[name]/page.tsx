@@ -1,9 +1,19 @@
-import { TypographyH1 } from "@/components/typography/H1";
+"use client";
 
-export default function Pose({ params }: { params: { name: string } }) {
+import { TypographyH1 } from "@/components/typography/H1";
+import { yogaPoses } from "@/lib/yoga-poses";
+import { redirect, useParams } from "next/navigation";
+import { WebcamComponent } from "./webcam-component";
+
+export default function Pose() {
+  const { name } = useParams();
+  const pose = yogaPoses.find((pose) => pose.name === name);
+  if (!pose) redirect("/poses");
+
   return (
-    <div>
-      <TypographyH1>{params.name}</TypographyH1>
-    </div>
+    <>
+      <TypographyH1>{pose.title}</TypographyH1>
+      <WebcamComponent pose={pose} />
+    </>
   );
 }
