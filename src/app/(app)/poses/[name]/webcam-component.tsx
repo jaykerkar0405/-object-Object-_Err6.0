@@ -30,7 +30,6 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [lastVideoTime, setLastVideoTime] = useState(-1);
-  const [playing, setPlaying] = useState(false);
   const [feedbacks, setFeedbacks] = useState<
     {
       time: number;
@@ -38,6 +37,7 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
     }[]
   >([]);
 
+  const playing = useRef(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoElement = useRef<HTMLVideoElement>(null);
   const canvasElement = useRef<HTMLCanvasElement>(null);
@@ -107,7 +107,8 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
     if (feedbackString.length) {
       async function generateAndPlaySpeech() {
         try {
-          if (playing) return;
+          if (playing.current) return;
+          playing.current = true;
           const response = await fetch("/api/speech", {
             method: "POST",
             headers: {
@@ -118,9 +119,11 @@ export function WebcamComponent({ pose }: { pose: YogaPose }) {
 
           const { audioUrl } = await response.json();
           audioRef.current!.src = audioUrl;
-          setPlaying(true);
           await audioRef.current!.play();
-          audioRef.current!.addEventListener("ended", () => setPlaying(false));
+          audioRef.current!.addEventListener(
+            "ended",
+            () => (playing.current = false)
+          );
         } catch (error) {
           console.error("Error playing audio:", error);
         }
