@@ -1,4 +1,5 @@
 import { TypographyH1 } from "@/components/typography/H1";
+import { TypographyP } from "@/components/typography/P";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
@@ -55,7 +56,7 @@ export default function PreferredPoses() {
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="flex flex-col items-start gap-4">
-                <p className="text-sm text-gray-600">{pose.description}</p>
+                <TypographyP>{pose.description}</TypographyP>
                 <Link href={`preffered-poses/${pose.name}`}>
                   <Button>Try Pose</Button>
                 </Link>
