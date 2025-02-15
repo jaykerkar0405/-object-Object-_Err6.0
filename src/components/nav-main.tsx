@@ -14,6 +14,7 @@ import {
   LogOutIcon,
   NotebookTextIcon,
   PersonStandingIcon,
+  Wind,
   User2,
 } from "lucide-react";
 import Image from "next/image";
@@ -72,6 +73,7 @@ export function SidebarNavigation() {
       items: [
         { label: "Poses", href: "/poses", icon: PersonStandingIcon },
         { label: "Routines", href: "/routines", icon: NotebookTextIcon },
+        { label: "Breathing", href: "/breathing", icon: Wind },
       ],
     },
     {
