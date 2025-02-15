@@ -44,3 +44,5 @@ package-lock.json
 # Serwist
 public/sw*
 public/swe-worker*
+
+certificates

@@ -5,6 +5,7 @@ import {
   ChartNoAxesCombinedIcon,
   ChevronUp,
   CogIcon,
+  Flower2,
   LayoutDashboardIcon,
   LoaderCircle,
   LogInIcon,
@@ -71,6 +72,7 @@ export function SidebarNavigation() {
         { label: "Poses", href: "/poses", icon: PersonStandingIcon },
         { label: "Routines", href: "/routines", icon: NotebookTextIcon },
         { label: "Breathing", href: "/breathing", icon: Wind },
+        { label: "Yoga Studio", href: "/yoga-studio", icon: Flower2 },
       ],
     },
   ];

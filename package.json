@@ -50,6 +50,8 @@
     "date-fns": "^3.6.0",
     "elevenlabs": "^1.51.0",
     "embla-carousel-react": "^8.5.2",
+    "firebase": "^11.3.1",
+    "firebase-admin": "^13.1.0",
     "framer-motion": "^12.4.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.475.0",
