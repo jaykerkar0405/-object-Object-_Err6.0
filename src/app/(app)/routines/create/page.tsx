@@ -52,6 +52,7 @@ export default function Routines() {
   const [selectedPose, setSelectedPose] = useState<YogaPose | null>(null);
   const [poses, setPoses] = useState<PoseRoutines[]>([]);
   const [creating, setCreating] = useState(false);
+  const [routineName, setRoutineName] = useState<string>("");
 
   function addPose(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -71,12 +72,16 @@ export default function Routines() {
 
     setCreating(true);
     await createRoutine(
-      poses.map((pose, index) => ({
-        poseName: pose.pose.title,
-        duration: pose.duration,
-        reps: pose.reps,
-        poseIndex: index,
-      }))
+      poses.map(
+        (pose, index) => ({
+          poseName: pose.pose.title,
+          duration: pose.duration,
+          reps: pose.reps,
+          poseIndex: index,
+        }),
+        routineName
+      ),
+      routineName
     );
     toast.success("Routine created successfully");
     setCreating(false);
@@ -102,6 +107,7 @@ export default function Routines() {
             ) : (
               <span className="text-muted-foreground">No pose selected</span>
             )}
+
             <CardTitle className="text-lg">
               {selectedPose ? selectedPose.title : "Select a pose"}
             </CardTitle>
@@ -113,6 +119,14 @@ export default function Routines() {
                 ? selectedPose.description
                 : "Choose a pose to see details"}
             </p>
+            <Input
+              id="name"
+              type="text"
+              value={routineName}
+              onChange={(e) => setRoutineName(e.target.value)}
+              className="mb-4"
+              placeholder="Enter routine name"
+            />
             <Select
               required
               onValueChange={(value) => {

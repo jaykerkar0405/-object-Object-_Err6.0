@@ -11,7 +11,8 @@ export async function createRoutine(
     poseName: string;
     duration: number;
     reps: number;
-  }[]
+  }[],
+  routineName: string
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/sign-in");
@@ -19,6 +20,7 @@ export async function createRoutine(
   await prisma.routine.create({
     data: {
       userId: session.user.id,
+      routineName,
       routinePoses: { createMany: { data } },
     },
   });
