@@ -47,8 +47,8 @@ export const yogaPoses: YogaPose[] = [
     title: "Cobra Pose",
     name: "cobra-pose",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { max: 130, min: 90 }),
-      getJointFeedback(landmarks, "right-hip", { max: 130, min: 90 }),
+      getJointFeedback(landmarks, "left-hip", { max: 145, min: 90 }),
+      getJointFeedback(landmarks, "right-hip", { max: , min: 90 }),
       getJointFeedback(landmarks, "left-elbow", { min: 160 }),
       getJointFeedback(landmarks, "right-elbow", { min: 140 }),
       getJointFeedback(landmarks, "left-knee", { min: 120 }),
@@ -63,10 +63,10 @@ export const yogaPoses: YogaPose[] = [
     name: "bridge-pose",
     image: "/poses/bandhasana.jpg",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { min: 120, max: 150 }),
-      getJointFeedback(landmarks, "right-hip", { min: 120, max: 250 }),
-      getJointFeedback(landmarks, "left-knee", { min: 70 }),
-      getJointFeedback(landmarks, "right-knee", { min: 70 }),
+      getJointFeedback(landmarks, "left-hip", { min: 120, max: 160 }),
+      getJointFeedback(landmarks, "right-hip", { min: 120, max: 160 }),
+      getJointFeedback(landmarks, "left-knee", { min: 60 }),
+      getJointFeedback(landmarks, "right-knee", { min: 60 }),
     ],
     description:
       "Setu Bandhasana - A gentle backbend that strengthens the back, glutes, and hamstrings while opening the chest.",
