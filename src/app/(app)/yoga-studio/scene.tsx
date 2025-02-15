@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import "aframe";
 
 export function Scene() {
   const videoRef = useRef<HTMLVideoElement>(null);

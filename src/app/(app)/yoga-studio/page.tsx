@@ -2,8 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-// @ts-expect-error: maa chuda na pls
-const Scene = dynamic(() => import("./scene"), {
+const Scene = dynamic(() => import("./scene").then((mod) => mod.Scene), {
   ssr: false,
 });
 

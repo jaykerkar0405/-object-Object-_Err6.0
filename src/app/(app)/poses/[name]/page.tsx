@@ -3,7 +3,7 @@
 import { TypographyH1 } from "@/components/typography/H1";
 import { yogaPoses } from "@/lib/yoga-poses";
 import { redirect, useParams } from "next/navigation";
-import { WebcamComponent } from "./webcam-component";
+import { DurationWrapper } from "./duration-wrapper";
 
 export default function Pose() {
   const { name } = useParams();
@@ -13,8 +13,7 @@ export default function Pose() {
   return (
     <>
       <TypographyH1>{pose.title}</TypographyH1>
-
-      <WebcamComponent pose={pose} duration={3} />
+      <DurationWrapper pose={pose} />
     </>
   );
 }
