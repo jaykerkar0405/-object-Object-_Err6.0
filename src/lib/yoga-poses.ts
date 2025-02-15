@@ -14,9 +14,6 @@ export type YogaPose = {
   constraints: (landmarks: NormalizedLandmark[]) => PoseFeedback[];
 };
 
-export const meditationPose : YogaPose =
-  
-
 export const yogaPoses: YogaPose[] = [
   {
     title: "Downward Dog",
