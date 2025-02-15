@@ -107,7 +107,7 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
         <audio
           ref={this.audioRef}
           loop
-          src={this.props.audioSrc || "/nature.mp3"}
+          src={this.props.audioSrc || "/sounds/finish.mp3"}
         />
 
         <div className="analog-clock">
