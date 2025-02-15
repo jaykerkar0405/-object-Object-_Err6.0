@@ -10,8 +10,8 @@ import { LinkBreadcrumbs } from "@/components/LinkBreadCrumbs";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "Create Next App",
-  description: "Created by create-next-app",
+  title: "YogaSense",
+  description: "Your Yoga companion",
 };
 
 const inter = Inter({
