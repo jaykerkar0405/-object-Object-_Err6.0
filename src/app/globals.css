@@ -103,3 +103,43 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.clock {
+  width: 90vw;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  margin: 5px;
+  .digital-clock {
+    padding: 10px;
+  }
+  .analog-clock {
+    width: 300px;
+    height: 300px;
+    border: solid 1px #000;
+    border-radius: 50%;
+    position: relative;
+    background: #fff;
+    .dial {
+      position: absolute;
+      left: 50%;
+      width: 150px;
+      height: 150px;
+      transform-origin: bottom left;
+      &.seconds {
+        border-left:solid 2px green;
+      }
+      &.minutes {
+        border-left:solid 2px #cc0000;
+      }
+      &.hours {
+        width: 35px;
+        height: 35px;
+        top: 15px;
+        border-left:solid 2px #000;
+      }
+    }
+  }
+}
