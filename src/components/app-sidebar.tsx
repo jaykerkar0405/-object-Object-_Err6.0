@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "./mode-toggle";
 import { SwInstallOrUpdateButton } from "./sw-buttons";
+import { useSession } from "@/lib/auth-client";
 
 const data = {
   user: {
@@ -159,6 +160,14 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession();
+
+  const user = {
+    name: session?.user.name || "",
+    email: session?.user.email || "",
+    avatar: session?.user.image || "",
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -173,7 +182,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SwInstallOrUpdateButton />
         </SidebarMenu>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
