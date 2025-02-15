@@ -8,17 +8,11 @@ import { TypographyH1 } from "@/components/typography/H1";
 export default function Root() {
   return (
     <>
-      <div className="w-full flex justify-end pt-5 pr-5">
-        <Link href="/dashboard">
-          <Button>Get Started</Button>
-        </Link>
-      </div>
-
       <div className="flex flex-col items-center -mt-10">
         <Image
           src="/favicon.png"
-          height={300}
-          width={300}
+          height={260}
+          width={260}
           alt="YogaSense Icon"
           className="mx-auto"
         />
@@ -30,6 +24,9 @@ export default function Root() {
           <TypographyP>AI Based Yoga Assistant</TypographyP>
         </div>
         <IconCloudDemo />
+        <Link href="/dashboard">
+          <Button>Get Started</Button>
+        </Link>
       </div>
     </>
   );

@@ -1,0 +1,17 @@
+model Routine {
+  id           String        @id @default(cuid())
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String
+  routinePoses RoutinePose[]
+  routineName  String
+}
+
+model RoutinePose {
+  id        String  @id @default(cuid())
+  routine   Routine @relation(fields: [routineId], references: [id])
+  routineId String
+  poseName  String
+  duration  Int
+  reps      Int
+  poseIndex Int
+}

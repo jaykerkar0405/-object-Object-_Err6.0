@@ -1,0 +1,8 @@
+Model Information:
+* title:	Banana Plant With Pot
+* source:	https://sketchfab.com/3d-models/banana-plant-with-pot-789d665f88704393af11a1b64956d474
+* author:	GobyDiputra (https://sketchfab.com/GobyDiputra)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
