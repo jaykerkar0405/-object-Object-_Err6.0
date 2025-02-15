@@ -47,8 +47,8 @@ export const yogaPoses: YogaPose[] = [
     title: "Cobra Pose",
     name: "cobra-pose",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { max: 140, min: 90 }),
-      getJointFeedback(landmarks, "right-hip", { max: 140, min: 90 }),
+      getJointFeedback(landmarks, "left-hip", { max: 150, min: 90 }),
+      getJointFeedback(landmarks, "right-hip", { max: 150, min: 90 }),
       getJointFeedback(landmarks, "left-elbow", { min: 160 }),
       getJointFeedback(landmarks, "right-elbow", { min: 140 }),
       getJointFeedback(landmarks, "left-knee", { min: 120 }),
@@ -178,7 +178,12 @@ export function getJointFeedback(
 
   let feedback: string | undefined = undefined;
   if (constraint?.min !== undefined && angle < constraint.min) {
+    if (joint.includes('hip')) {
     feedback = `Bend your ${joint.replace("-", " ")} more`;
+    } else {
+
+      feedback = `Bend your ${joint.replace("-", " ")} more`;
+    }
   } else if (constraint?.max !== undefined && angle > constraint.max) {
     feedback = `Extend your ${joint.replace("-", " ")} more`;
   }
