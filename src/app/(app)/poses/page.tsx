@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import yogaPoses from "@/lib/yoga-poses";
+import { yogaPoses } from "@/lib/yoga-poses";
 import Image from "next/image";
 import Link from "next/link";
 

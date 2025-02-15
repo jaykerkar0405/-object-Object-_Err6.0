@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { YogaPose } from "@/lib/yoga-poses";
 import {
   DrawingUtils,
   FilesetResolver,
@@ -15,7 +16,7 @@ import {
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef, useState } from "react";
 
-export function WebcamComponent() {
+export function WebcamComponent({ pose }: { pose: YogaPose }) {
   const [poseLandmarker, setPoseLandmarker] = useState<PoseLandmarker>();
   const [mediaDevices, setMediaDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
@@ -38,11 +39,13 @@ export function WebcamComponent() {
       }).then((landmarker) => setPoseLandmarker(landmarker));
     });
 
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      const videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
-      setMediaDevices(videoDevices);
+    navigator.mediaDevices.getUserMedia({ video: true }).then(() => {
+      navigator.mediaDevices.enumerateDevices().then((devices) => {
+        const videoDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
+        setMediaDevices(videoDevices);
+      });
     });
   }, []);
 
@@ -90,6 +93,11 @@ export function WebcamComponent() {
                 PoseLandmarker.POSE_CONNECTIONS
               );
             }
+            if (pose.constraints) {
+              try {
+                console.log(pose.constraints(result.worldLandmarks[0]));
+              } catch {}
+            }
             canvasCtx.restore();
           }
         );
@@ -97,6 +105,7 @@ export function WebcamComponent() {
       window.requestAnimationFrame(predictWebcam);
     }
     setTimeout(() => predictWebcam(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDevice, poseLandmarker]);
 
   return (
@@ -108,11 +117,13 @@ export function WebcamComponent() {
             <SelectValue placeholder="Select a camera" />
           </SelectTrigger>
           <SelectContent>
-            {mediaDevices.map((device) => (
-              <SelectItem key={device.deviceId} value={device.deviceId}>
-                {device.label}
-              </SelectItem>
-            ))}
+            {mediaDevices
+              .filter(({ deviceId }) => deviceId !== "")
+              .map((device) => (
+                <SelectItem key={device.deviceId} value={device.deviceId}>
+                  {device.label}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </div>

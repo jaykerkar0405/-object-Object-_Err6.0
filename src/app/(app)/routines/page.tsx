@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 
 import { TypographyH1 } from "@/components/typography/H1";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import yogaPoses from "@/lib/yoga-poses";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { yogaPoses } from "@/lib/yoga-poses";
 
 interface YogaPose {
   title: string;
@@ -165,7 +165,7 @@ export default function Routines() {
             <TableRow key={index}>
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <img
+                  <Image
                     className="rounded-lg"
                     src={pose.pose.image}
                     width={50}
