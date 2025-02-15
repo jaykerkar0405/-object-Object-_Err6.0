@@ -16,7 +16,6 @@ type Item = { label: string; href?: string };
 function pathnameToItems(pathname: string): Item[] {
   const parts = pathname.split("/").filter((part) => part !== "");
   const items = [
-    { label: "Home", href: "/" },
     ...parts.map((part, index) => {
       if (index === parts.length - 1) {
         part = part.split("?")[0];
@@ -24,7 +23,9 @@ function pathnameToItems(pathname: string): Item[] {
       return {
         label: part
           .split("-")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .map((word, idx) =>
+            idx === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word
+          )
           .join(" "),
         href: `/${parts.slice(0, index + 1).join("/")}`,
       };

@@ -1,14 +1,8 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { AppSidebar } from "@/components/app-sidebar";
-import { LinkBreadcrumbs } from "@/components/LinkBreadCrumbs";
-import { Separator } from "@/components/ui/separator";
-import { SwEventsHandler } from "@/components/sw-events-handler";
 
 export const metadata: Metadata = {
   title: "YogaSense",
@@ -40,19 +34,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="p-4 flex flex-col gap-4 w-full max-w-xl mx-auto">
-              <div className="flex items-center h-6 gap-2">
-                <SidebarTrigger />
-                <Separator orientation="vertical" className="h-full mr-2" />
-                <LinkBreadcrumbs />
-              </div>
-              {children}
-            </main>
-          </SidebarProvider>
-          <Toaster />
-          <SwEventsHandler />
+          {children}
         </ThemeProvider>
       </body>
     </html>

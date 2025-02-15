@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
-  return <div>hello</div>;
+  return <Link href="/dashboard">Go to dashboard</Link>;
 }
