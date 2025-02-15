@@ -127,7 +127,7 @@ export const yogaPoses: YogaPose[] = [
       getJointFeedback(landmarks, "left-knee", { max: 45 }),
       getJointFeedback(landmarks, "right-knee", { max: 45 }),
     ],
-    image: "/poses/wheel-pose.jpg",
+    image: "/poses/meditation.jpg",
     description:
       "Sit comfortably with your back straight, close your eyes, and focus on your breath",
   },

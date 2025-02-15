@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect, useRef } from "react";
 import {
   Select,
   SelectItem,
@@ -8,12 +9,11 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import { BreathingAction } from "@/actions/breathing";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
 type BreathingPhase =
@@ -58,95 +58,36 @@ export default function Breathing() {
   const [isExerciseStarted, setIsExerciseStarted] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [audioLoaded, setAudioLoaded] = useState(false);
+  const [phaseKey, setPhaseKey] = useState<number>(0); // Add key for animation reset
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const isRunningRef = useRef<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const phaseIndexRef = useRef<number>(0);
 
   useEffect(() => {
     audioRef.current = new Audio("/ambient-music.mp3");
     audioRef.current.loop = true;
 
+    const handleCanPlay = () => {
+      setAudioLoaded(true);
+    };
+
+    audioRef.current.addEventListener("canplay", handleCanPlay);
+
     return () => {
       if (audioRef.current) {
+        audioRef.current.removeEventListener("canplay", handleCanPlay);
         audioRef.current.pause();
         audioRef.current = null;
       }
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      if (countdownRef.current) {
-        clearInterval(countdownRef.current);
-      }
+      cleanupTimers();
     };
   }, []);
 
-  useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.log("Audio playback failed:", error);
-            setIsPlaying(false);
-          });
-        }
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  }, [isPlaying]);
-
-  const formatTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-      2,
-      "0"
-    )}:${String(remainingSeconds).padStart(2, "0")}`;
-  };
-
-  const startExercise = () => {
-    setIsExerciseStarted(true);
-    isRunningRef.current = true;
-    setTimeRemaining(duration * 60);
-
-    countdownRef.current = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          stopExercise();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    let phaseIndex = 0;
-    const pattern = breathingPatterns[breathingPattern];
-
-    const runPhase = () => {
-      if (!isRunningRef.current) return;
-
-      const currentPhase = pattern[phaseIndex];
-      setBreathingPhase(currentPhase.phase);
-      setAnimationDuration(currentPhase.duration / 1000);
-
-      if (timerRef.current) clearTimeout(timerRef.current);
-
-      timerRef.current = setTimeout(() => {
-        phaseIndex = (phaseIndex + 1) % pattern.length;
-        runPhase();
-      }, currentPhase.duration);
-    };
-
-    runPhase();
-  };
-
-  const stopExercise = async () => {
-    isRunningRef.current = false;
+  const cleanupTimers = () => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
@@ -155,33 +96,83 @@ export default function Breathing() {
       clearInterval(countdownRef.current);
       countdownRef.current = null;
     }
-
-    setIsExerciseStarted(false);
-    setBreathingPhase("Inhale");
-    setTimeRemaining(0);
-
-    const formData = new FormData();
-    formData.append("duration", duration.toString());
-    formData.append("breathingPattern", breathingPattern);
-
-    const response = await BreathingAction(formData);
-    console.log(response);
   };
 
-  const toggleMusic = () => {
-    setIsPlaying(!isPlaying);
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
+  };
+
+  const startExercise = () => {
+    setIsExerciseStarted(true);
+    isRunningRef.current = true;
+    setTimeRemaining(duration * 60);
+    phaseIndexRef.current = 0;
+
+    countdownRef.current = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          cleanupTimers();
+          setIsExerciseStarted(false);
+          if (isPlaying && audioRef.current) {
+            audioRef.current.pause();
+            setIsPlaying(false);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    runPhase();
+  };
+
+  const runPhase = () => {
+    if (!isRunningRef.current) return;
+
+    const pattern = breathingPatterns[breathingPattern];
+    const currentPhase = pattern[phaseIndexRef.current];
+
+    setBreathingPhase(currentPhase.phase);
+    setAnimationDuration(currentPhase.duration / 1000);
+    setPhaseKey((prev) => prev + 1); // Increment key to force animation reset
+
+    if (timerRef.current) clearTimeout(timerRef.current);
+
+    timerRef.current = setTimeout(() => {
+      phaseIndexRef.current = (phaseIndexRef.current + 1) % pattern.length;
+      runPhase();
+    }, currentPhase.duration);
+  };
+
+  const toggleMusic = async () => {
+    if (!audioRef.current || !audioLoaded) return;
+
+    try {
+      if (!isPlaying) {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } else {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+    } catch (error) {
+      console.error("Error toggling audio:", error);
+      setIsPlaying(false);
+    }
   };
 
   const getScale = (phase: BreathingPhase) => {
     switch (phase) {
       case "Inhale":
+      case "Inhale deeply":
         return 2.25;
       case "Hold":
         return 2.25;
       case "Exhale":
-        return 1.25;
-      case "Inhale deeply":
-        return 2.75;
       case "Exhale slowly":
         return 1.25;
       default:
@@ -248,41 +239,46 @@ export default function Breathing() {
             </div>
 
             <div className="relative" style={{ zIndex: 1 }}>
-              <motion.div
-                className="flex justify-center items-center w-48 h-48"
-                animate={{
-                  rotate: [0, 360],
-                  scale: getScale(breathingPhase),
-                }}
-                transition={{
-                  scale: { duration: animationDuration, ease: "easeInOut" },
-                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                }}
-              >
-                <Image
-                  width={128}
-                  height={128}
-                  alt="Breathing"
-                  src="/breathing.png"
-                  className="object-contain drop-shadow-md"
-                />
-              </motion.div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  className="flex justify-center items-center w-48 h-48"
+                  animate={{
+                    rotate: [0, 360],
+                    scale: getScale(breathingPhase),
+                  }}
+                  transition={{
+                    scale: { duration: animationDuration, ease: "easeInOut" },
+                    rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                  }}
+                >
+                  <Image
+                    width={128}
+                    unoptimized
+                    height={128}
+                    alt="Breathing"
+                    src="/breathing.png"
+                    className="object-contain drop-shadow-md"
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <p className="text-2xl font-semibold text-center capitalize">
               {breathingPhase}
             </p>
 
-            <div className="flex gap-4">
-              <Button onClick={toggleMusic}>
-                {isPlaying ? (
-                  <Pause className="h-4 w-4 mr-2" />
-                ) : (
-                  <Play className="h-4 w-4 mr-2" />
-                )}
-                <span>{isPlaying ? "Pause Music" : "Play Music"}</span>
-              </Button>
-            </div>
+            <Button
+              onClick={toggleMusic}
+              disabled={!audioLoaded}
+              className="flex items-center"
+            >
+              {isPlaying ? (
+                <Pause className="h-4 w-4 mr-2" />
+              ) : (
+                <Play className="h-4 w-4 mr-2" />
+              )}
+              <span>{isPlaying ? "Pause Music" : "Play Music"}</span>
+            </Button>
           </CardContent>
         </Card>
       )}
