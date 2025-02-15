@@ -13,7 +13,8 @@ export default function Home() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token: "c7vkPCyqhsmH-_qDl9IJv0:APA91bF9103VHFdg32bdceQbOYsl7hdzPq_4Ct2gRkdnyIk3SAY0q_VE-yasoyhx-a4tP3SFAf1XpggRruGNJgGToRKV0Ji7gJLLMsm5Dn34sACzxSskYYI",
+        token:
+          "c7vkPCyqhsmH-_qDl9IJv0:APA91bF9103VHFdg32bdceQbOYsl7hdzPq_4Ct2gRkdnyIk3SAY0q_VE-yasoyhx-a4tP3SFAf1XpggRruGNJgGToRKV0Ji7gJLLMsm5Dn34sACzxSskYYI",
         title: "Test Notification",
         message: "This is a test notification",
       }),
