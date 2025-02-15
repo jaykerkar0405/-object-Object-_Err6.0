@@ -4,19 +4,18 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
-import { Loader2, Key } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -25,7 +24,7 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <div className="w-full flex justify-center items-center h-screen">
+    <div className="w-full flex justify-center items-center h-px grow">
       <Card className="max-w-md">
         <CardHeader>
           <CardTitle className="text-lg md:text-xl text-black dark:text-white">
