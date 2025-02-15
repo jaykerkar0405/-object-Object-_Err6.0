@@ -115,12 +115,21 @@ export default function BreathingE() {
 
     runPhase();
 
-    timerRef.current = setTimeout(() => {
-      isRunningRef.current = false;
-      setIsExerciseStarted(false);
-      setBreathingPhase("Inhale");
-      setIsPlaying(false);
+    setTimeout(() => {
+      if (isRunningRef.current) {
+        stopExercise();
+      }
     }, duration * 60 * 1000);
+  };
+
+  const stopExercise = () => {
+    isRunningRef.current = false;
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setIsExerciseStarted(false);
+    setBreathingPhase("Inhale");
   };
 
   const toggleMusic = () => {
@@ -149,7 +158,7 @@ export default function BreathingE() {
       <h1 className="text-3xl font-bold mb-6">Breathing Exercise</h1>
 
       {!isExerciseStarted ? (
-        <form className="space-y-6">
+        <div className="space-y-6">
           <div>
             <label
               htmlFor="breathing-pattern"
@@ -194,37 +203,41 @@ export default function BreathingE() {
           </div>
 
           <Button onClick={startExercise}>Start Breathing</Button>
-        </form>
+        </div>
       ) : (
         <Card className="w-full max-w-md mx-auto shadow-lg border border-gray-200 dark:border-gray-800 bg-background">
           <CardContent className="flex flex-col items-center gap-6 py-6">
-            <motion.div
-              className="flex justify-center items-center w-48 h-48"
-              animate={{
-                rotate: [0, 360],
-                scale: getScale(breathingPhase),
-              }}
-              transition={{
-                scale: { duration: animationDuration, ease: "easeInOut" },
-                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-              }}
-            >
-              <Image
-                width={128}
-                height={128}
-                alt="Breathing"
-                src="/breathing.png"
-                className="object-contain drop-shadow-md"
-              />
-            </motion.div>
+            <div className="relative" style={{ zIndex: 1 }}>
+              <motion.div
+                className="flex justify-center items-center w-48 h-48"
+                animate={{
+                  rotate: [0, 360],
+                  scale: getScale(breathingPhase),
+                }}
+                transition={{
+                  scale: { duration: animationDuration, ease: "easeInOut" },
+                  rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                }}
+              >
+                <Image
+                  width={128}
+                  height={128}
+                  alt="Breathing"
+                  src="/breathing.png"
+                  className="object-contain drop-shadow-md"
+                />
+              </motion.div>
+            </div>
 
             <p className="text-2xl font-semibold text-center capitalize">
               {breathingPhase}
             </p>
 
-            <Button onClick={toggleMusic}>
-              {isPlaying ? "Pause Music" : "Play Music"}
-            </Button>
+            <div className="relative z-10">
+              <Button onClick={toggleMusic}>
+                {isPlaying ? "Pause Music" : "Play Music"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
