@@ -16,6 +16,7 @@ import {
 import * as React from "react";
 import { SwInstallOrUpdateButton } from "./sw-buttons";
 import { DropdownMenu, DropdownMenuContent } from "./ui/dropdown-menu";
+import { ModeToggle } from "./mode-toggle";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -33,6 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarNavigation />
       </SidebarContent>
       <SidebarFooter>
+        <ModeToggle />
         <SidebarMenu className="flex flex-row w-full">
           <SwInstallOrUpdateButton />
           <SidebarMenuItem className="w-full">
