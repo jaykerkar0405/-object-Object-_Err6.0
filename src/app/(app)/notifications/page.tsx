@@ -6,17 +6,20 @@ import useFcmToken from "@/hooks/use-fcm-token";
 export default function Home() {
   const { token, notificationPermissionStatus } = useFcmToken();
 
-  const handleTestNotification = async () => {
+  const handleNotification = async (
+    token: string,
+    title: string,
+    message: string
+  ) => {
     const response = await fetch("/api/send-notification", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token:
-          "c7vkPCyqhsmH-_qDl9IJv0:APA91bF9103VHFdg32bdceQbOYsl7hdzPq_4Ct2gRkdnyIk3SAY0q_VE-yasoyhx-a4tP3SFAf1XpggRruGNJgGToRKV0Ji7gJLLMsm5Dn34sACzxSskYYI",
-        title: "Test Notification",
-        message: "This is a test notification",
+        token: token,
+        title: title,
+        message: message,
       }),
     });
 

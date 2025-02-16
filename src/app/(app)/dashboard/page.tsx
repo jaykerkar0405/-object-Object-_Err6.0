@@ -20,6 +20,7 @@ import {
   Tooltip,
 } from "recharts";
 import Chatbot from "@/components/chatbot";
+import FcmProvider from "@/components/fcm-provider";
 
 const Dashboard = () => {
   const practiceData = [
@@ -42,6 +43,8 @@ const Dashboard = () => {
 
   return (
     <>
+      <FcmProvider />
+
       <div className="p-6 space-y-6 bg-background">
         <div className="flex justify-between items-center">
           <div>

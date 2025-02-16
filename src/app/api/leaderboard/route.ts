@@ -21,7 +21,6 @@ export async function GET() {
     return duration + bonus;
   }
 
-  // Aggregate scores per userId
   const userScores = new Map();
 
   for (const data of breathingData) {
@@ -33,14 +32,13 @@ export async function GET() {
         userId,
         name: user.name,
         image: user.image || "",
-        score: 0, // Initialize score
+        score: 0,
       });
     }
 
-    userScores.get(userId)!.score += points; // Accumulate score
+    userScores.get(userId)!.score += points;
   }
 
-  // Convert to array and sort by score (highest first)
   const leaderboard = Array.from(userScores.values()).sort(
     (a, b) => b.score - a.score
   );
