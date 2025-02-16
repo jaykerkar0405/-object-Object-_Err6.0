@@ -8,25 +8,25 @@ export default function FcmProvider() {
   const { data: session } = useSession();
   const { token, notificationPermissionStatus } = useFcmToken();
 
-  async function saveToken(userId: string, token: string) {
-    try {
-      const res = await fetch("/api/fcm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, token }),
-      });
+  // async function saveToken(userId: string, token: string) {
+  //   try {
+  //     const res = await fetch("/api/fcm", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ userId, token }),
+  //     });
 
-      if (!res.ok) {
-        console.error("Failed to save token:", res.status);
-        return;
-      }
+  //     if (!res.ok) {
+  //       console.error("Failed to save token:", res.status);
+  //       return;
+  //     }
 
-      const data = await res.json();
-      console.log("Token saved:", data);
-    } catch (error) {
-      console.error("Error saving token:", error);
-    }
-  }
+  //     const data = await res.json();
+  //     console.log("Token saved:", data);
+  //   } catch (error) {
+  //     console.error("Error saving token:", error);
+  //   }
+  // }
 
   useEffect(() => {
     if (
