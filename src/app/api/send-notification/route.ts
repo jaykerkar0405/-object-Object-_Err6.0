@@ -2,10 +2,9 @@ import admin from "firebase-admin";
 import { Message } from "firebase-admin/messaging";
 import { NextRequest, NextResponse } from "next/server";
 
-/* eslint-disable */
+const serviceAccount = JSON.parse(String(process.env.FIREBASE_SERVICE_KEY));
 
 if (!admin.apps.length) {
-  const serviceAccount = require("@/service_key.json");
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
