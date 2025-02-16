@@ -149,8 +149,6 @@ export default function Breathing() {
     formData.append("duration", duration.toString());
     formData.append("breathingPattern", breathingPattern);
 
-    const response = await BreathingAction(formData);
-
     try {
       const response = await BreathingAction(formData);
       console.log(response);
