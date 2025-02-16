@@ -12,11 +12,14 @@ const handleNotification = async (
   message: string
 ) => {
   try {
-    const response = await fetch("/api/send-notification", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, title, message }),
-    });
+    const response = await fetch(
+      `${process.env.BETTER_AUTH_URL}/api/send-notification`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, title, message }),
+      }
+    );
 
     const data = await response.json();
     console.log("Notification Response:", data);
