@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { getHeartrate } from "../actions";
+import { toast } from "sonner";
 
 type BreathingPhase =
   | "Inhale"
@@ -149,7 +150,16 @@ export default function Breathing() {
     formData.append("breathingPattern", breathingPattern);
 
     const response = await BreathingAction(formData);
-    console.log(response);
+
+    try {
+      const response = await BreathingAction(formData);
+      console.log(response);
+
+      toast.success("Exercise data saved successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save exercise data.");
+    }
   };
 
   const runPhase = () => {
