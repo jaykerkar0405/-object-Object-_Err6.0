@@ -13,6 +13,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { HeartChart } from "./heart-chart";
 import { PoseChart } from "./pose-chart";
 
 export async function PoseData({ id }: { id: string }) {
@@ -24,6 +25,16 @@ export async function PoseData({ id }: { id: string }) {
     include: { poseFeedbacks: true },
   });
   if (!poseData) redirect("/poses/view");
+
+  const heartRates = await prisma.heartRate.findMany({
+    where: {
+      userId: session.user.id,
+      timestamp: {
+        lt: poseData.createdAt,
+        gt: new Date(poseData.createdAt.getTime() - poseData.duration * 1000),
+      },
+    },
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -47,6 +58,17 @@ export async function PoseData({ id }: { id: string }) {
                 {poseData.createdAt.toLocaleDateString()}
               </p>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Heart rate</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-96">
+            <HeartChart heartRates={heartRates} />
           </div>
         </CardContent>
       </Card>
@@ -79,7 +101,13 @@ export async function PoseData({ id }: { id: string }) {
             <TableBody>
               {poseData.poseFeedbacks.map((feedback, i) => (
                 <TableRow key={i}>
-                  <TableCell>{(feedback.time / 1000).toFixed(1)}s</TableCell>
+                  <TableCell>
+                    {(
+                      (feedback.time - poseData.poseFeedbacks[0].time) /
+                      1000
+                    ).toFixed(1)}
+                    s
+                  </TableCell>
                   <TableCell>{feedback.joint}</TableCell>
                   <TableCell>{feedback.angle.toFixed(1)}°</TableCell>
                   <TableCell>{feedback.feedback || "Good form"}</TableCell>

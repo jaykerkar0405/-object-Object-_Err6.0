@@ -24,12 +24,13 @@ import {
   FilesetResolver,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
+import { Heart, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { getHeartrate } from "../../actions";
 import { useRoutineStore } from "../../routines/[id]/start/routine-state";
 import { createPoseData } from "./actions";
-import { LoaderCircle } from "lucide-react";
 
 export function WebcamComponent({
   pose,
@@ -53,12 +54,21 @@ export function WebcamComponent({
   >([]);
   const [timer, setTimer] = useState<number>(1);
   const [timeLeft, setTimeLeft] = useState<number>(duration);
+  const [latestHr, setLatestHr] = useState<number>();
 
   const routineStore = useRoutineStore();
   const playing = useRef(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoElement = useRef<HTMLVideoElement>(null);
   const canvasElement = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getHeartrate().then((value) => setLatestHr(value?.heartRate));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     FilesetResolver.forVisionTasks(
@@ -314,8 +324,13 @@ export function WebcamComponent({
         )}
       </div>
       <div className="flex gap-2 items-center">
+        {latestHr !== undefined && (
+          <p className="flex items-center gap-2 text-lg font-semibold bg-muted p-2 rounded-md">
+            <Heart /> {latestHr}
+          </p>
+        )}
         <Progress value={((duration - timeLeft) * 100) / duration} />
-        <span className="whitespace-nowrap">{timeLeft} seconds left</span>
+        <span className="whitespace-nowrap">{timeLeft}s left</span>
       </div>
       <Table>
         <TableCaption>Some feedback from our model.</TableCaption>

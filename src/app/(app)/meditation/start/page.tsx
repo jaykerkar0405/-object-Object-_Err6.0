@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
 import Clock from "./clock";
+import { WebcamComponent } from "../../poses/[name]/webcam-component";
+import { yogaPoses } from "@/lib/yoga-poses";
 
 export default function StartMeditation() {
   const [duration, setDuration] = useState(0);
@@ -45,9 +47,13 @@ export default function StartMeditation() {
         </Button>
       </div>
 
-      <div className="mx-auto mt-4">
-        <Clock ref={clockRef} duration={duration} />
-      </div>
+      {duration > 0 && (
+        <WebcamComponent
+          key={duration}
+          duration={duration * 60}
+          pose={yogaPoses.find((p) => p.name === "meditation-pose")!}
+        />
+      )}
     </div>
   );
 }
