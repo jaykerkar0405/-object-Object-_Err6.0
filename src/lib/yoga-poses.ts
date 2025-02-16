@@ -63,8 +63,8 @@ export const yogaPoses: YogaPose[] = [
     name: "bridge-pose",
     image: "/poses/bandhasana.jpg",
     constraints: (landmarks) => [
-      getJointFeedback(landmarks, "left-hip", { min: 120, max: 160 }),
-      getJointFeedback(landmarks, "right-hip", { min: 120, max: 160 }),
+      getJointFeedback(landmarks, "left-hip", { min: 120, max: 145 }),
+      getJointFeedback(landmarks, "right-hip", { min: 120, max: 165 }),
       getJointFeedback(landmarks, "left-knee", { min: 60 }),
       getJointFeedback(landmarks, "right-knee", { min: 60 }),
     ],
