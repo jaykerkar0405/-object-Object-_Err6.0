@@ -1,4 +1,5 @@
 import { TypographyH1 } from "@/components/typography/H1";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function RoutineUsage({
   params,
@@ -34,6 +36,7 @@ export default async function RoutineUsage({
           <TableRow className="hover:bg-transparent">
             <TableHead>Pose Name</TableHead>
             <TableHead>Duration</TableHead>
+            <TableHead>View Pose</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,6 +44,11 @@ export default async function RoutineUsage({
             <TableRow key={index}>
               <TableCell>{pose.poseName}</TableCell>
               <TableCell>{pose.duration}</TableCell>
+              <TableCell>
+                <Link href={`/poses/views/${pose.id}`}>
+                  <Button variant="link">View</Button>
+                </Link>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
