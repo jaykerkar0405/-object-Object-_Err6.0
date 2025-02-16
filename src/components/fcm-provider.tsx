@@ -34,7 +34,7 @@ export default function FcmProvider() {
       session?.user.id &&
       notificationPermissionStatus === "granted"
     ) {
-      saveToken(session.user.id, token);
+      console.log(token);
     }
   }, [token, notificationPermissionStatus, session]);
 
