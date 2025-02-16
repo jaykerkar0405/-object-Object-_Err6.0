@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pause, Play } from "lucide-react";
+import { Heart, Pause, Play } from "lucide-react";
 import { BreathingAction } from "@/actions/breathing";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
+import { getHeartrate } from "../actions";
 
 type BreathingPhase =
   | "Inhale"
@@ -60,12 +61,21 @@ export default function Breathing() {
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [audioLoaded, setAudioLoaded] = useState(false);
   const [, setPhaseKey] = useState<number>(0); // Add key for animation reset
+  const [latestHr, setLatestHr] = useState<number>();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const isRunningRef = useRef<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const phaseIndexRef = useRef<number>(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getHeartrate().then((value) => setLatestHr(value?.heartRate));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     audioRef.current = new Audio("/ambient-music.mp3");
@@ -249,6 +259,11 @@ export default function Breathing() {
             <div className="text-2xl font-mono font-semibold bg-secondary/20 px-4 py-2 rounded-lg">
               {formatTime(timeRemaining)}
             </div>
+            {latestHr !== undefined && (
+              <p className="flex items-center gap-2 text-lg font-semibold bg-muted p-2 rounded-md">
+                <Heart /> {latestHr}
+              </p>
+            )}
 
             <div className="relative" style={{ zIndex: 1 }}>
               <AnimatePresence mode="wait">
