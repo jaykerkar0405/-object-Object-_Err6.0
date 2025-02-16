@@ -1,8 +1,8 @@
 import { TypographyH1 } from "@/components/typography/H1";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
-import { ChevronRight, PlusIcon } from "lucide-react";
+import { ChevronRight, Eye, PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export default async function RoutinesPage() {
@@ -23,12 +23,19 @@ export default async function RoutinesPage() {
             <Card key={index}>
               <CardHeader className="flex-row justify-between items-center">
                 <CardTitle>{routine.routineName}</CardTitle>
-                <Link href={`/routines/${routine.id}`}>
+              </CardHeader>
+              <CardContent>
+                <Link href={`/routines/${routine.id}`} className="mr-4">
                   <Button variant="secondary">
                     View <ChevronRight />
                   </Button>
                 </Link>
-              </CardHeader>
+                <Link href={`/routines/usages/${routine.id}`}>
+                  <Button variant="outline">
+                    Usages <Eye />
+                  </Button>
+                </Link>
+              </CardContent>
             </Card>
           ))}
         </div>
