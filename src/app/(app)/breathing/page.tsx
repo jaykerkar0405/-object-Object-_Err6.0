@@ -318,7 +318,7 @@ export default function Breathing() {
               Session Duration (minutes): {duration}
             </label>
             <Slider
-              min={1}
+              min={0.5}
               max={20}
               step={1}
               id="duration"
