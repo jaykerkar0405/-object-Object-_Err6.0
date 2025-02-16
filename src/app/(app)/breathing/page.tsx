@@ -71,14 +71,17 @@ export default function Breathing() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const phaseIndexRef = useRef<number>(0);
 
+  // Initialize audio
   useEffect(() => {
-    const setupAudio = () => {
+    const initializeAudio = () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = "";
         audioRef.current = null;
       }
 
-      const audio = new Audio("/ambient-music.mp3");
+      const audio = new Audio();
+      audio.src = "/ambient-music.mp3";
       audio.loop = true;
 
       const handleCanPlay = () => {
@@ -86,10 +89,10 @@ export default function Breathing() {
         setAudioError(null);
       };
 
-      const handleError = (e: ErrorEvent) => {
+      const handleError = () => {
         setAudioError("Failed to load audio");
         setAudioLoaded(false);
-        console.error("Audio error:", e);
+        setIsPlaying(false);
       };
 
       audio.addEventListener("canplay", handleCanPlay);
@@ -102,23 +105,43 @@ export default function Breathing() {
       return () => {
         audio.removeEventListener("canplay", handleCanPlay);
         audio.removeEventListener("error", handleError);
-        audio.pause();
       };
     };
 
-    setupAudio();
+    const cleanup = initializeAudio();
 
+    return () => {
+      cleanup();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+      setIsPlaying(false);
+      setAudioLoaded(false);
+    };
+  }, []);
+
+  // Handle heartrate updates
+  useEffect(() => {
     const interval = setInterval(() => {
       getHeartrate().then((value) => setLatestHr(value?.heartRate));
     }, 1000);
 
+    return () => clearInterval(interval);
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      clearInterval(interval);
+      cleanupTimers();
+      isRunningRef.current = false;
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = "";
         audioRef.current = null;
       }
-      cleanupTimers();
+      setIsPlaying(false);
     };
   }, []);
 
@@ -167,9 +190,11 @@ export default function Breathing() {
     setBreathingPhase("Inhale");
     setTimeRemaining(0);
 
-    // Stop the music if it's playing
-    if (isPlaying) {
-      await toggleMusic();
+    // Stop music if playing
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
     }
 
     const formData = new FormData();
@@ -205,14 +230,19 @@ export default function Breathing() {
   };
 
   const toggleMusic = async () => {
-    if (!audioRef.current || !audioLoaded) {
-      toast.error("Audio not ready yet. Please try again.");
+    if (!audioRef.current) {
+      toast.error("Audio not initialized");
       return;
     }
 
     try {
       if (!isPlaying) {
-        // Reset the audio to the beginning
+        // Reset and reload audio if needed
+        if (!audioRef.current.src) {
+          audioRef.current.src = "/ambient-music.mp3";
+          audioRef.current.loop = true;
+          await audioRef.current.load();
+        }
         audioRef.current.currentTime = 0;
         await audioRef.current.play();
         setIsPlaying(true);
@@ -224,6 +254,12 @@ export default function Breathing() {
       console.error("Error toggling audio:", error);
       toast.error("Failed to toggle audio. Please try again.");
       setIsPlaying(false);
+
+      // Reset audio on error
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     }
   };
 
