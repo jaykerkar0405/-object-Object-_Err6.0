@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import FcmProvider from "@/components/fcm-provider";
 
 export const metadata: Metadata = {
   title: "YogaSense - AI-Powered Yoga Form Analyzer",

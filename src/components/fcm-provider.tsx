@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSession } from "@/lib/auth-client";
 import useFcmToken from "@/hooks/use-fcm-token";
 
-export default function () {
+export default function FcmProvider() {
   const { data: session } = useSession();
   const { token, notificationPermissionStatus } = useFcmToken();
 
@@ -34,8 +34,7 @@ export default function () {
       session?.user.id &&
       notificationPermissionStatus === "granted"
     ) {
-      console.log(23)
-      alert(23)
+      saveToken(session.user.id, token);
     }
   }, [token, notificationPermissionStatus, session]);
 
