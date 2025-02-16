@@ -27,7 +27,6 @@ export default async function RoutineUsage({
     },
   });
 
-  console.log(data);
   return (
     <div>
       <TypographyH1>{data?.routine.routineName}</TypographyH1>
@@ -45,7 +44,7 @@ export default async function RoutineUsage({
               <TableCell>{pose.poseName}</TableCell>
               <TableCell>{pose.duration}</TableCell>
               <TableCell>
-                <Link href={`/poses/views/${pose.id}`}>
+                <Link href={`/poses/view/${pose.id}`}>
                   <Button variant="link">View</Button>
                 </Link>
               </TableCell>
