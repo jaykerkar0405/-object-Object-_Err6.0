@@ -2,7 +2,14 @@ import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "silver-couscous-ww46gx7wwj92v55v-3000.app.github.dev",
+      ],
+    },
+  },
 };
 
 const withSerwist = withSerwistInit({

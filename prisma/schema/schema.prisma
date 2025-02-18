@@ -22,6 +22,7 @@ model User {
   breathings    Breathing[]
   PoseData      PoseData[]
   HeartRate     HeartRate[]
+  fcmToken      FCMToken?   @relation
 
   @@unique([email])
   @@map("user")
@@ -87,4 +88,15 @@ model HeartRate {
   userId    String
   timestamp DateTime
   heartRate Int
+}
+
+model FCMToken {
+  id        String   @id @default(cuid())
+  token     String
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("fcm_token")
 }
