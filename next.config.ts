@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: [
         "localhost:3000",
+        "yogasense.vercel.app",
         "silver-couscous-ww46gx7wwj92v55v-3000.app.github.dev",
       ],
     },
